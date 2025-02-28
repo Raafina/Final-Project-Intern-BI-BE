@@ -5,14 +5,9 @@ const { getUserByEmail } = require('../repository/auth.repository');
 exports.login = async (email, password) => {
   // get the user
   let user = await getUserByEmail(email);
-  if (!user) {
-    throw new Error(`User is not found!`);
-  }
-
-  // compare the password
   const isValid = await bcrypt.compare(password, user?.password);
-  if (!isValid) {
-    throw new Error(`Wrong password!`);
+  if (!user || !isValid) {
+    throw new Error(`Email atau Password salah!`);
   }
 
   // delete password
