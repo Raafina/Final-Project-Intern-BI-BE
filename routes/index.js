@@ -1,12 +1,9 @@
 const router = require('express').Router();
 
 const authControllers = require('../controllers/auth.controllers');
+const internRoutes = require('./intern.routes');
 
 router.use('/auth/login', authControllers.login);
-router.use('/', (req, res) => {
-  res.status(200).json({
-    message: 'OK',
-  });
-});
+router.use('/applications', internRoutes);
 
 module.exports = router;

@@ -8,6 +8,7 @@ const loginSchema = z.object({
     .email({ message: 'Email tidak valid' }),
   password: z.string(),
 });
+
 exports.login = async (req, res, next) => {
   try {
     const result = loginSchema.safeParse(req.body);
