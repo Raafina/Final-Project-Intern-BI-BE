@@ -5,57 +5,68 @@ module.exports = {
     await queryInterface.createTable('applications', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
       },
       nama_lengkap: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       universitas: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       tipe_magang: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       semester: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       IPK: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       program_studi: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+      },
+      rencana_mulai: {
+        type: Sequelize.STRING,
+      },
+      rencana_selesai: {
+        type: Sequelize.STRING,
       },
       NPWP: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       KTP: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       proposal: {
-        type: Sequelize.STRING
-      },
-      CV: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       surat_pengantar: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       buku_tabungan: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+      },
+      CV: {
+        type: Sequelize.STRING,
+      },
+      CV_score: {
+        type: Sequelize.STRING,
+      },
+      motivation_letter_score: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('applications');
-  }
+  },
 };

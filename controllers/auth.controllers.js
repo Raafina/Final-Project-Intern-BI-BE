@@ -1,4 +1,4 @@
-const { login } = require('../usecase/auth.usecase');
+const { login } = require('../usecases/auth.usecases');
 const { z } = require('zod');
 
 const loginSchema = z.object({

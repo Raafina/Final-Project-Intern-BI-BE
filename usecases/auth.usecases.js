@@ -1,6 +1,9 @@
 const jsonwebtoken = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { getUserByEmail } = require('../repository/auth.repository');
+const {
+  getUserByEmail,
+  getUserById,
+} = require('../repositories/auth.repositories');
 
 exports.login = async (email, password) => {
   // get the user
@@ -32,5 +35,17 @@ exports.login = async (email, password) => {
     token,
   };
 
+  return data;
+};
+
+exports.getUserProfile = async (id) => {
+  let data = await getUserById(id);
+  if (!data) {
+    throw new Error('Akun tidak ditemukan');
+  } else if (data?.dataValues?.password) {
+    delete data?.dataValues?.password;
+  } else {
+    delete data?.password;
+  }
   return data;
 };
