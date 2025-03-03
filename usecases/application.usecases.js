@@ -17,7 +17,12 @@ exports.getApplications = async () => {
 
 exports.getApplication = async (id) => {
   const data = await applicationRepo.getApplication(id);
+  return data;
+};
 
+exports.updateApplication = async (id, payload) => {
+  await applicationRepo.updateApplication(id, payload);
+  const data = applicationRepo.getApplication(id);
   return data;
 };
 

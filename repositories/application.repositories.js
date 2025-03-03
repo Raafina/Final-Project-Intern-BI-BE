@@ -20,6 +20,21 @@ exports.getApplication = async (id) => {
   }
 };
 
+exports.updateApplication = async (id, payload) => {
+  console.log('payload repo', payload);
+  await application.update(payload, {
+    where: { id },
+  });
+
+  const data = await application.findAll({
+    where: {
+      id,
+    },
+  });
+
+  return data;
+};
+
 exports.deleteApplication = async (id) => {
   await application.destroy({
     where: { id },
