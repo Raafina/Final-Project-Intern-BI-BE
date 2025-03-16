@@ -32,22 +32,7 @@ module.exports = {
       rencana_selesai: {
         type: Sequelize.STRING,
       },
-      NPWP: {
-        type: Sequelize.STRING,
-      },
-      KTP: {
-        type: Sequelize.STRING,
-      },
-      proposal: {
-        type: Sequelize.STRING,
-      },
-      surat_pengantar: {
-        type: Sequelize.STRING,
-      },
-      buku_tabungan: {
-        type: Sequelize.STRING,
-      },
-      CV: {
+      google_drive_link: {
         type: Sequelize.STRING,
       },
       CV_score: {

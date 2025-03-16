@@ -2,11 +2,23 @@ const applicationUseCase = require('../usecases/application.usecases');
 
 exports.getApplications = async (req, res, next) => {
   try {
-    const data = await applicationUseCase.getApplications();
+    // Pastikan req.query selalu memiliki nilai default agar tidak undefined
+    const { month, year, page, limit, sort, sortBy, search } = req.query;
+    console.log(month, 'month', year, 'year');
+    const applications = await applicationUseCase.getApplications({
+      month: month ? parseInt(month) : null,
+      year: year ? parseInt(year) : null,
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 10,
+      sort,
+      sortBy,
+      search,
+    });
+
     res.status(200).json({
-      status: true,
-      message: 'Success',
-      data: data,
+      success: true,
+      data: applications.data,
+      pagination: applications.pagination,
     });
   } catch (error) {
     next(error);
@@ -35,7 +47,12 @@ exports.getApplication = async (req, res, next) => {
     next(error);
   }
 };
-
+exports.createApplication = async (req, res, next) => {
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
 exports.updateAppliaction = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -48,12 +65,7 @@ exports.updateAppliaction = async (req, res, next) => {
       program_studi,
       rencana_mulai,
       rencana_selesai,
-      NPWP,
-      KTP,
-      proposal,
-      surat_pengantar,
-      buku_tabungan,
-      CV,
+      google_drive_link,
       CV_score,
       motivation_letter_score,
     } = req.body;
@@ -67,12 +79,7 @@ exports.updateAppliaction = async (req, res, next) => {
       program_studi,
       rencana_mulai,
       rencana_selesai,
-      NPWP,
-      KTP,
-      proposal,
-      surat_pengantar,
-      buku_tabungan,
-      CV,
+      google_drive_link,
       CV_score,
       motivation_letter_score,
     });

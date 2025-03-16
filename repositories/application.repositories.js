@@ -1,23 +1,59 @@
 const { application } = require('../models');
+const { Op } = require('sequelize');
 
-exports.getApplications = async () => {
-  const data = await application.findAll();
+exports.getApplications = async ({
+  month,
+  year,
+  page,
+  limit,
+  sort,
+  sortBy,
+  search,
+}) => {
+  const filter = {};
 
-  return data;
-};
+  // Filter berdasarkan bulan & tahun rencana_mulai
+  if (month && year) {
+    filter.rencana_mulai = {
+      [Op.gte]: new Date(year, month - 1, 1), // Awal bulan
+      [Op.lt]: new Date(year, month, 1), // Awal bulan berikutnya
+    };
+  }
 
-exports.getApplication = async (id) => {
+  if (search) {
+    filter.nama_lengkap = { [Op.iLike]: `%${search}%` };
+  }
+
+  const totalItems = await application.count({ where: filter });
+
   const data = await application.findAll({
-    where: {
-      id,
-    },
+    where: filter,
+    attributes: [
+      'id',
+      'nama_lengkap',
+      'rencana_mulai',
+      'IPK',
+      'tipe_magang',
+      'program_studi',
+      'google_drive_link',
+      'motivation_letter_score',
+      'CV_score',
+    ],
+    order: [[sortBy || 'nama_lengkap', sort || 'asc']],
+    offset: (page - 1) * limit,
+    limit: limit,
   });
 
-  if (!data.length) {
-    return 'Data pendaftar tidak ditemukan';
-  } else {
-    return data;
-  }
+  return {
+    data,
+    totalItems,
+    totalPages: Math.ceil(totalItems / limit),
+  };
+};
+
+exports.createApplication = async (payload) => {
+  const data = await application.create(payload);
+  return data;
 };
 
 exports.updateApplication = async (id, payload) => {

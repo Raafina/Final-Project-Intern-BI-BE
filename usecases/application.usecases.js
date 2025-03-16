@@ -1,18 +1,43 @@
 const applicationRepo = require('../repositories/application.repositories');
 
-exports.getApplications = async () => {
-  const datas = await applicationRepo.getApplications();
+exports.getApplications = async ({
+  month,
+  year,
+  page = 1,
+  limit = 10,
+  sort = 'asc',
+  sortBy = 'nama_lengkap',
+  search = '',
+}) => {
+  const { data, totalItems, totalPages } =
+    await applicationRepo.getApplications({
+      month,
+      year,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      sort,
+      sortBy,
+      search,
+    });
 
-  return datas.map((data) => ({
-    id: data.id,
-    nama_lengkap: data.nama_lengkap,
-    rencana_mulai: data.rencana_mulai,
-    IPK: data.IPK,
-    tipe_magang: data.tipe_magang,
-    program_studi: data.program_studi,
-    motivation_letter_score: data.motivation_letter_score,
-    CV_score: data.CV_score,
-  }));
+  return {
+    data: data.map((item) => ({
+      id: item.id,
+      nama_lengkap: item.nama_lengkap,
+      rencana_mulai: item.rencana_mulai,
+      IPK: item.IPK,
+      tipe_magang: item.tipe_magang,
+      program_studi: item.program_studi,
+      google_drive_link: item.google_drive_link,
+      motivation_letter_score: item.motivation_letter_score,
+      CV_score: item.CV_score,
+    })),
+    pagination: {
+      totalItems,
+      totalPages,
+      currentPage: page,
+    },
+  };
 };
 
 exports.getApplication = async (id) => {
@@ -20,6 +45,11 @@ exports.getApplication = async (id) => {
   return data;
 };
 
+exports.createApplication = async (payload) => {
+  const data = await applicationRepo.createApplication(payload);
+
+  return data;
+};
 exports.updateApplication = async (id, payload) => {
   await applicationRepo.updateApplication(id, payload);
   const data = applicationRepo.getApplication(id);
@@ -28,6 +58,5 @@ exports.updateApplication = async (id, payload) => {
 
 exports.deleteApplication = async (id) => {
   const data = await applicationRepo.deleteApplication(id);
-
   return data;
 };

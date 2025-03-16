@@ -50,29 +50,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      NPWP: {
+      google_drive_link: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
-      KTP: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      proposal: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      surat_pengantar: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      buku_tabungan: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      CV: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       CV_score: {
         type: DataTypes.STRING,
