@@ -38,8 +38,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      program_studi: {
-        type: DataTypes.STRING,
+      jurusan: {
+        type: DataTypes.ENUM(
+          'Ekonomi',
+          'Akuntansi',
+          'Manajemen',
+          'IT',
+          'Hukum',
+          'Statistika'
+        ),
         allowNull: false,
       },
       rencana_mulai: {
@@ -54,11 +61,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      CV_score: {
+      skor_CV: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      motivation_letter_score: {
+      skor_motivation_letter: {
         type: DataTypes.STRING,
         allowNull: true,
       },

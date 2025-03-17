@@ -10,47 +10,80 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
       },
       nama_lengkap: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      email: {
+        allowNull: false,
+        unique: true,
+        type: Sequelize.STRING,
+      },
+      no_hp: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       universitas: {
-        type: Sequelize.STRING,
-      },
-      tipe_magang: {
-        type: Sequelize.STRING,
-      },
-      semester: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       IPK: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
-      program_studi: {
+      tipe_magang: {
+        allowNull: false,
+        type: Sequelize.ENUM(['Magang Mandiri', 'Magang KRS']),
+      },
+      jurusan: {
+        allowNull: false,
+        type: Sequelize.ENUM([
+          'Akuntansi',
+          'Manajemen',
+          'IT',
+          'Hukum',
+          'Statistika',
+        ]),
+      },
+      bidang_peminatan: {
+        allowNull: false,
+        type: Sequelize.ENUM([
+          'Moneter',
+          'Makroprudensial',
+          'Sistem Pembayaran',
+          'Pengelolaan Uang Rupiah',
+        ]),
+      },
+      skor_CV: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
+      skor_motivation_letter: {
+        allowNull: true,
+        type: Sequelize.STRING,
+      },
+      semester: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       rencana_mulai: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       rencana_selesai: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       google_drive_link: {
-        type: Sequelize.STRING,
-      },
-      CV_score: {
-        type: Sequelize.STRING,
-      },
-      motivation_letter_score: {
+        allowNull: false,
         type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
       },
     });
   },

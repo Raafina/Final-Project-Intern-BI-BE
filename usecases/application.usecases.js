@@ -27,10 +27,10 @@ exports.getApplications = async ({
       rencana_mulai: item.rencana_mulai,
       IPK: item.IPK,
       tipe_magang: item.tipe_magang,
-      program_studi: item.program_studi,
+      jurusan: item.jurusan,
       google_drive_link: item.google_drive_link,
-      motivation_letter_score: item.motivation_letter_score,
-      CV_score: item.CV_score,
+      skor_motivation_letter: item.skor_motivation_letter,
+      skor_CV: item.skor_CV,
     })),
     pagination: {
       totalItems,
@@ -47,7 +47,6 @@ exports.getApplication = async (id) => {
 
 exports.createApplication = async (payload) => {
   const data = await applicationRepo.createApplication(payload);
-
   return data;
 };
 exports.updateApplication = async (id, payload) => {

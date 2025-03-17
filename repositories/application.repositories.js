@@ -34,10 +34,10 @@ exports.getApplications = async ({
       'rencana_mulai',
       'IPK',
       'tipe_magang',
-      'program_studi',
+      'jurusan',
       'google_drive_link',
-      'motivation_letter_score',
-      'CV_score',
+      'skor_motivation_letter',
+      'skor_CV',
     ],
     order: [[sortBy || 'nama_lengkap', sort || 'asc']],
     offset: (page - 1) * limit,
@@ -51,6 +51,18 @@ exports.getApplications = async ({
   };
 };
 
+exports.getApplication = async (id) => {
+  const data = await application.findAll({
+    where: {
+      id,
+    },
+  });
+  if (data.length) {
+    return data;
+  }
+
+  return 'Data tidak ditemukan';
+};
 exports.createApplication = async (payload) => {
   payload.id = uuidv4();
   const data = await application.create(payload);
@@ -58,7 +70,6 @@ exports.createApplication = async (payload) => {
 };
 
 exports.updateApplication = async (id, payload) => {
-  console.log('payload repo', payload);
   await application.update(payload, {
     where: { id },
   });
