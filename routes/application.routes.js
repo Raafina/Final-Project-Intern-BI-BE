@@ -4,7 +4,8 @@ const { authMiddleware } = require('../middlewares/auth.middleware');
 
 router
   .route('/')
-  .get(authMiddleware('admin'), applicationControllers.getApplications);
+  .get(authMiddleware('admin'), applicationControllers.getApplications)
+  .post(applicationControllers.createApplication);
 
 router
   .route('/:id')

@@ -1,6 +1,6 @@
 const { application } = require('../models');
 const { Op } = require('sequelize');
-
+const { v4: uuidv4 } = require('uuid');
 exports.getApplications = async ({
   month,
   year,
@@ -52,6 +52,7 @@ exports.getApplications = async ({
 };
 
 exports.createApplication = async (payload) => {
+  payload.id = uuidv4();
   const data = await application.create(payload);
   return data;
 };
