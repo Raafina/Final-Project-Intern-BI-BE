@@ -87,8 +87,6 @@ exports.updateWeight = async (req, res, next) => {
     const { id } = req.params;
     const data = await weightUseCase.updateWeight(id, req.body);
 
-    console.log(data);
-
     res.status(200).json({
       success: true,
       message: 'Data bobot berhasil diperbarui',

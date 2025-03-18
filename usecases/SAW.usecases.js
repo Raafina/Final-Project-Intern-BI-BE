@@ -1,5 +1,7 @@
 const applicationRepo = require('../repositories/application.repositories');
 const weightRepo = require('../repositories/weight.repositories');
+const SAWRepo = require('../repositories/saw.repositories');
+const { v4: uuidv4 } = require('uuid');
 
 const kategoriMagangMapping = {
   magang_mandiri: 0.8,
@@ -73,6 +75,16 @@ exports.calculate = async (
   let dataWeight = await weightRepo.getWeightById(weight_id);
   if (!dataWeight || dataApplication.length === 0) return [];
 
+  // Convert Sequelize model instances to plain objects
+  dataApplication = dataApplication.map((app) => {
+    // If it's a Sequelize model with dataValues, return just the dataValues
+    if (app.dataValues) {
+      return app.dataValues;
+    }
+    // Otherwise just return the object as is
+    return app;
+  });
+
   let results = [];
 
   for (const [bidang, jumlah] of Object.entries(kebutuhan_bidang_kerja)) {
@@ -96,21 +108,21 @@ exports.calculate = async (
 
     let normalizedData = dataApplicationFilter.map((d) => ({
       ...d,
-      ipk: normalizeIPK(d.ipk),
-      kategori: kategoriMagangMapping[d.tipe_magang.toLowerCase()] || 0.5,
+      IPK: normalizeIPK(parseFloat(d.IPK)),
+      tipe_magang: kategoriMagangMapping[d.tipe_magang.toLowerCase()] || 0.5,
       jurusan: jurusanMapping[bidang]?.[d.jurusan.toLowerCase()] || 0.2,
-      skor_cv: (d.skor_cv ?? 0) / 100,
-      skor_motivation_letter: (d.skor_motivation_letter ?? 0) / 100,
+      skor_CV: (parseFloat(d.skor_CV) ?? 0) / 100,
+      skor_motivation_letter: (parseFloat(d.skor_motivation_letter) ?? 0) / 100,
     }));
 
     let rankedData = normalizedData
       .map((d) => ({
         ...d,
         score:
-          d.ipk * dataWeight.bobot_IPK +
+          d.IPK * dataWeight.bobot_IPK +
           d.tipe_magang * dataWeight.bobot_tipe_magang +
           d.jurusan * dataWeight.bobot_jurusan +
-          d.skor_cv * dataWeight.bobot_skor_CV +
+          d.skor_CV * dataWeight.bobot_skor_CV +
           d.skor_motivation_letter * dataWeight.bobot_skor_motivation_letter,
       }))
       .sort((a, b) => b.score - a.score);
@@ -118,6 +130,8 @@ exports.calculate = async (
     let selected = rankedData.slice(0, jumlah);
     results.push(...selected);
   }
+
+  // await SAWRepo.saveSAW_Result(results);
 
   return results;
 };

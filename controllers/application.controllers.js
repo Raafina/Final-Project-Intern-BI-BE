@@ -64,7 +64,6 @@ const schema = yup.object().shape({
 exports.getApplications = async (req, res, next) => {
   try {
     const { month, year, page, limit, sort, sortBy, search } = req.query;
-    console.log(month, 'month', year, 'year');
     const applications = await applicationUseCase.getApplications({
       month: month ? parseInt(month) : null,
       year: year ? parseInt(year) : null,

@@ -66,7 +66,6 @@ exports.getApplicationById = async (id) => {
 };
 
 exports.getApplicationByStartDate = async (periode_mulai) => {
-  console.log(periode_mulai, 'periode mulai');
   const data = await application.findAll({
     where: {
       rencana_mulai: {
