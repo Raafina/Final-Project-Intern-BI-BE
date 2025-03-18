@@ -1,14 +1,15 @@
-const weight = require('../models/weight');
 const weightUseCase = require('../usecases/weight.usecases');
 const yup = require('yup');
 
 const schema = yup.object().shape({
   nama: yup.string().required('Nama bobot wajib diisi'),
   bobot_IPK: yup.number().required('Bobot IPK wajib diisi'),
-  bobot_kategori_magang: yup.number('Bobot Kategori Magang wajib diisi'),
-  bobot_jurusan: yup.number('Bobot Kategori Magang wajib diisi'),
-  bobot_skor_CV: yup.number('Bobot Kategori Magang wajib diisi'),
-  bobot_skor_motivation_letter: yup.number('Bobot Kategori Magang wajib diisi'),
+  bobot_tipe_magang: yup.number('Bobot tipe magang wajib diisi'),
+  bobot_jurusan: yup.number('Bobot jurusan wajib diisi'),
+  bobot_skor_CV: yup.number('Bobot skor CV wajib diisi'),
+  bobot_skor_motivation_letter: yup.number(
+    'Bobot skor motivation letter Magang wajib diisi'
+  ),
 });
 
 exports.getWeights = async (req, res, next) => {

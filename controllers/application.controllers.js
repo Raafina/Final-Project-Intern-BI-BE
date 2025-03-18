@@ -8,25 +8,28 @@ const schema = yup.object().shape({
   no_hp: yup.string().required('No. HP wajib diisi'),
   tipe_magang: yup
     .string()
-    .oneOf(['Magang KRS', 'Magang Mandiri'], 'Jurusan tidak valid')
+    .oneOf(['magang_KRS', 'magang_mandiri'], 'Tipe magang tidak valid')
     .required('Tipe magang wajib diisi'),
   semester: yup.number().min(1, 'Minimal Semester 4').required(),
-  bidang_peminatan: yup
+  bidang_kerja: yup
     .string()
     .oneOf(
       [
-        'Moneter',
-        'Makroprudensial',
-        'Sistem Pembayaran',
-        'Pengelolaan Uang Rupiah',
+        'moneter',
+        'makroprudensial',
+        'sistem_pembayaran',
+        'pengelolaan_uang_rupiah',
+        'humas',
+        'internal',
       ],
       'Bidang Peminatan tidak valid'
-    ),
-  IPK: yup.number().required(),
+    )
+    .required('Bidang Peminatan wajib diisi'),
+  IPK: yup.number().required('IPK wajib diisi'),
   jurusan: yup
     .string()
     .oneOf(
-      ['Akuntansi', 'Manajemen', 'IT', 'Hukum', 'Statistika'],
+      ['akuntansi', 'manajemen', 'IT', 'hukum', 'statistika', 'ilmu_sosial'],
       'Jurusan tidak valid'
     )
     .required('Jurusan wajib diisi'),

@@ -31,6 +31,7 @@ exports.getApplications = async ({
     attributes: [
       'id',
       'nama_lengkap',
+      'bidang_kerja',
       'rencana_mulai',
       'IPK',
       'tipe_magang',
@@ -51,12 +52,29 @@ exports.getApplications = async ({
   };
 };
 
-exports.getApplication = async (id) => {
+exports.getApplicationById = async (id) => {
   const data = await application.findAll({
     where: {
       id,
     },
   });
+  if (data.length) {
+    return data;
+  }
+
+  return 'Data tidak ditemukan';
+};
+
+exports.getApplicationByStartDate = async (periode_mulai) => {
+  console.log(periode_mulai, 'periode mulai');
+  const data = await application.findAll({
+    where: {
+      rencana_mulai: {
+        [Op.gte]: periode_mulai,
+      },
+    },
+  });
+
   if (data.length) {
     return data;
   }

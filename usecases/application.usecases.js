@@ -28,6 +28,7 @@ exports.getApplications = async ({
       IPK: item.IPK,
       tipe_magang: item.tipe_magang,
       jurusan: item.jurusan,
+      bidang_kerja: item.bidang_kerja,
       google_drive_link: item.google_drive_link,
       skor_motivation_letter: item.skor_motivation_letter,
       skor_CV: item.skor_CV,
@@ -41,7 +42,7 @@ exports.getApplications = async ({
 };
 
 exports.getApplication = async (id) => {
-  const data = await applicationRepo.getApplication(id);
+  const data = await applicationRepo.getApplicationById(id);
   return data;
 };
 
@@ -51,7 +52,7 @@ exports.createApplication = async (payload) => {
 };
 exports.updateApplication = async (id, payload) => {
   await applicationRepo.updateApplication(id, payload);
-  const data = applicationRepo.getApplication(id);
+  const data = applicationRepo.getApplicationById(id);
   return data;
 };
 

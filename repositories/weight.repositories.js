@@ -14,7 +14,7 @@ exports.getWeights = async ({ page, limit, sort, sortBy, search }) => {
       'id',
       'nama',
       'bobot_IPK',
-      'bobot_kategori_magang',
+      'bobot_tipe_magang',
       'bobot_jurusan',
       'bobot_skor_CV',
       'bobot_skor_motivation_letter',
@@ -30,7 +30,7 @@ exports.getWeights = async ({ page, limit, sort, sortBy, search }) => {
   };
 };
 
-exports.getWeight = async (id) => {
+exports.getWeightById = async (id) => {
   const data = await weight.findAll({
     where: {
       id,

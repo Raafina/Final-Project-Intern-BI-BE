@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.FLOAT,
       },
-      bobot_kategori_magang: {
+      bobot_tipe_magang: {
         allowNull: false,
         type: Sequelize.FLOAT,
       },

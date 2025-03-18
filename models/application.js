@@ -22,6 +22,25 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      bidang_kerja: {
+        type: DataTypes.ENUM(
+          'Moneter',
+          'Makroprudensial',
+          'Sistem Pembayaran',
+          'Pengelolaan Uang Rupiah',
+          'Humas',
+          'Internal'
+        ),
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      no_hp: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       universitas: {
         type: DataTypes.STRING,
         allowNull: false,
