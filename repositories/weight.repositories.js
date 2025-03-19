@@ -37,7 +37,7 @@ exports.getWeightById = async (id) => {
     },
   });
   if (data.length) {
-    return data;
+    return data[0];
   }
 
   return 'Data tidak ditemukan';

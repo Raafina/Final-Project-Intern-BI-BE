@@ -72,8 +72,10 @@ exports.calculate = async (
     rencana_mulai
   );
 
-  let dataWeight = await weightRepo.getWeightById(weight_id);
-  if (!dataWeight || dataApplication.length === 0) return [];
+  let dataWeightInstance = await weightRepo.getWeightById(weight_id);
+  let dataWeight = JSON.parse(JSON.stringify(dataWeightInstance));
+
+  console.log(dataWeight, 'cek');
 
   // Convert Sequelize model instances to plain objects
   dataApplication = dataApplication.map((app) => {
@@ -109,8 +111,8 @@ exports.calculate = async (
     let normalizedData = dataApplicationFilter.map((d) => ({
       ...d,
       IPK: normalizeIPK(parseFloat(d.IPK)),
-      tipe_magang: kategoriMagangMapping[d.tipe_magang.toLowerCase()] || 0.5,
-      jurusan: jurusanMapping[bidang]?.[d.jurusan.toLowerCase()] || 0.2,
+      tipe_magang: kategoriMagangMapping[d.tipe_magang] || 0.5,
+      jurusan: jurusanMapping[bidang]?.[d.jurusan] || 0.2,
       skor_CV: (parseFloat(d.skor_CV) ?? 0) / 100,
       skor_motivation_letter: (parseFloat(d.skor_motivation_letter) ?? 0) / 100,
     }));

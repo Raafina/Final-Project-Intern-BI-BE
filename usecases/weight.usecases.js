@@ -25,7 +25,7 @@ exports.getWeights = async ({
   };
 };
 exports.getWeight = async (id) => {
-  const data = await weightRepo.getWeight(id);
+  const data = await weightRepo.getWeightById(id);
   return data;
 };
 

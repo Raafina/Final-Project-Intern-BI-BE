@@ -28,7 +28,7 @@ module.exports = {
       },
       IPK: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.FLOAT,
       },
       tipe_magang: {
         allowNull: false,
@@ -58,11 +58,11 @@ module.exports = {
       },
       skor_CV: {
         allowNull: true,
-        type: Sequelize.STRING,
+        type: Sequelize.FLOAT,
       },
       skor_motivation_letter: {
         allowNull: true,
-        type: Sequelize.STRING,
+        type: Sequelize.FLOAT,
       },
       semester: {
         allowNull: false,
