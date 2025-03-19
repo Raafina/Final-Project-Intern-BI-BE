@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       IPK: {
-        type: DataTypes.STRING,
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
       jurusan: {
@@ -81,11 +81,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       skor_CV: {
-        type: DataTypes.STRING,
+        type: DataTypes.FLOAT,
         allowNull: true,
       },
       skor_motivation_letter: {
-        type: DataTypes.STRING,
+        type: DataTypes.FLOAT,
         allowNull: true,
       },
     },

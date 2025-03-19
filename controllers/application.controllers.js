@@ -85,7 +85,7 @@ exports.getApplications = async (req, res, next) => {
   }
 };
 
-exports.getApplication = async (req, res, next) => {
+exports.getApplicationById = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -104,6 +104,22 @@ exports.getApplication = async (req, res, next) => {
         data,
       });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getApplicationByStartDate = async (req, res, next) => {
+  try {
+    const { rencana_mulai } = req.body;
+    const results = await applicationUseCase.getApplicationByStartDate(
+      rencana_mulai
+    );
+
+    res.status(200).json({
+      message: 'Data berhasil dieksekusi dengan SAW!',
+      data: results,
+    });
   } catch (error) {
     next(error);
   }

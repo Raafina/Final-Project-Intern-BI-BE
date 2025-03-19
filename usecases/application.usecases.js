@@ -46,6 +46,12 @@ exports.getApplication = async (id) => {
   return data;
 };
 
+exports.getApplicationByStartDate = async (rencana_mulai) => {
+  const data = await applicationRepo.getApplicationByStartDate(rencana_mulai);
+
+  return data;
+};
+
 exports.createApplication = async (payload) => {
   const data = await applicationRepo.createApplication(payload);
   return data;

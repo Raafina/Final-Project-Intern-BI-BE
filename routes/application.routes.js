@@ -9,8 +9,15 @@ router
 
 router
   .route('/:id')
-  .get(authMiddleware('admin'), applicationControllers.getApplication)
+  .get(authMiddleware('admin'), applicationControllers.getApplicationById)
   .put(authMiddleware('admin'), applicationControllers.updateAppliaction)
   .delete(authMiddleware('admin'), applicationControllers.deleteApplication);
+
+router
+  .route('/detail')
+  .post(
+    authMiddleware('admin'),
+    applicationControllers.getApplicationByStartDate
+  );
 
 module.exports = router;

@@ -65,11 +65,19 @@ exports.getApplicationById = async (id) => {
   return 'Data tidak ditemukan';
 };
 
-exports.getApplicationByStartDate = async (periode_mulai) => {
+exports.getApplicationByStartDate = async (rencana_mulai) => {
+  const date = new Date(rencana_mulai);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  const startOfMonth = new Date(year, month, 1).toISOString().split('T')[0];
+
+  const endOfMonth = new Date(year, month + 1, 0).toISOString().split('T')[0];
+
   const data = await application.findAll({
     where: {
       rencana_mulai: {
-        [Op.gte]: periode_mulai,
+        [Op.between]: [startOfMonth, endOfMonth],
       },
     },
   });
@@ -80,6 +88,7 @@ exports.getApplicationByStartDate = async (periode_mulai) => {
 
   return 'Data tidak ditemukan';
 };
+
 exports.createApplication = async (payload) => {
   payload.id = uuidv4();
   const data = await application.create(payload);

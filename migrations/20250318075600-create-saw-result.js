@@ -8,76 +8,49 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID,
       },
-      nama_lengkap: {
+      full_name: {
         allowNull: false,
         type: Sequelize.STRING,
       },
       email: {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
       },
-      no_hp: {
+      start_month: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
       },
-      universitas: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      IPK: {
+      accepted_division: {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      tipe_magang: {
+      application_id: {
         allowNull: false,
-        type: Sequelize.ENUM(['magang_mandiri', 'magang_KRS']),
+        type: Sequelize.UUID,
       },
-      jurusan: {
+      IPK_score: {
         allowNull: false,
-        type: Sequelize.ENUM([
-          'akuntansi',
-          'manajemen',
-          'IT',
-          'hukum',
-          'statistika',
-          'ilmu_sosial',
-        ]),
+        type: Sequelize.FLOAT,
       },
-      bidang_kerja: {
+      intern_category_score: {
         allowNull: false,
-        type: Sequelize.ENUM([
-          'moneter',
-          'makroprudensial',
-          'sistem_pembayaran',
-          'pengelolaan_uang_rupiah',
-          'humas',
-          'internal',
-        ]),
+        type: Sequelize.FLOAT,
       },
-      skor_CV: {
+      college_major_score: {
+        allowNull: false,
+        type: Sequelize.FLOAT,
+      },
+      CV_score: {
+        type: Sequelize.FLOAT,
         allowNull: true,
-        type: Sequelize.STRING,
       },
-      skor_motivation_letter: {
+      motivation_letter_score: {
+        type: Sequelize.FLOAT,
         allowNull: true,
-        type: Sequelize.STRING,
       },
-      semester: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      rencana_mulai: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      rencana_selesai: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      google_drive_link: {
-        allowNull: false,
-        type: Sequelize.STRING,
+      total_score: {
+        type: Sequelize.FLOAT,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,

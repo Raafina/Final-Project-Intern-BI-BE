@@ -2,6 +2,7 @@ const applicationRepo = require('../repositories/application.repositories');
 const weightRepo = require('../repositories/weight.repositories');
 const SAWRepo = require('../repositories/saw.repositories');
 const { v4: uuidv4 } = require('uuid');
+const { col } = require('sequelize');
 
 const kategoriMagangMapping = {
   magang_mandiri: 0.8,
@@ -59,81 +60,139 @@ const jurusanMapping = {
   },
 };
 
-const normalizeIPK = (ipk) => {
-  return ipk / 4.0;
-};
+// Normalize IPK to a scale of 0 to 1
+const normalizeIPK = (ipk) => ipk / 4.0;
 
 exports.calculate = async (
   rencana_mulai,
   weight_id,
   kebutuhan_bidang_kerja
 ) => {
-  let dataApplication = await applicationRepo.getApplicationByStartDate(
-    rencana_mulai
+  const [dataApplicationRaw, dataWeightInstance] = await Promise.all([
+    applicationRepo.getApplicationByStartDate(rencana_mulai),
+    weightRepo.getWeightById(weight_id),
+  ]);
+  console.log(dataApplicationRaw, 'cek');
+
+  if (
+    !dataApplicationRaw ||
+    !dataWeightInstance ||
+    dataApplicationRaw === 'Data tidak ditemukan' ||
+    dataWeightInstance === 'Data tidak ditemukan'
+  ) {
+    throw new Error('Data tidak ditemukan');
+  }
+
+  const dataApplication = dataApplicationRaw.map(
+    (app) => app.dataValues || app
   );
 
-  let dataWeightInstance = await weightRepo.getWeightById(weight_id);
-  let dataWeight = JSON.parse(JSON.stringify(dataWeightInstance));
+  if (dataApplication.length > 0) {
+    await SAWRepo.deleteSAW_Result(dataApplication.map((d) => d.id));
+  }
 
-  console.log(dataWeight, 'cek');
+  const dataWeight = JSON.parse(JSON.stringify(dataWeightInstance));
 
-  // Convert Sequelize model instances to plain objects
-  dataApplication = dataApplication.map((app) => {
-    // If it's a Sequelize model with dataValues, return just the dataValues
-    if (app.dataValues) {
-      return app.dataValues;
-    }
-    // Otherwise just return the object as is
-    return app;
-  });
+  const assignedApplicants = new Set();
+  const selectedCandidates = [];
 
-  let results = [];
+  const posisiPenempatan = {};
 
   for (const [bidang, jumlah] of Object.entries(kebutuhan_bidang_kerja)) {
-    if (jumlah === 0 || !jurusanMapping[bidang]) continue;
+    if (jumlah <= 0 || !jurusanMapping[bidang]) continue;
 
-    let dataApplicationFilter = dataApplication.filter(
-      (item) => item.bidang_kerja === bidang
+    const yearMonth = rencana_mulai.substring(0, 7); // YYYY-MM format
+
+    let applicantsForField = dataApplication.filter(
+      (item) =>
+        item.bidang_kerja === bidang &&
+        !assignedApplicants.has(item.id) &&
+        item.rencana_mulai.startsWith(yearMonth)
     );
 
-    if (dataApplicationFilter.length < jumlah) {
-      let dataApplicationAdditional = dataApplication.filter(
+    if (applicantsForField.length < jumlah) {
+      const additionalApplicants = dataApplication.filter(
         (data) =>
-          !dataApplicationFilter.includes(data) &&
-          jurusanMapping[bidang][data.jurusan.toLowerCase()]
+          !applicantsForField.includes(data) &&
+          !assignedApplicants.has(data.id) &&
+          jurusanMapping[bidang]?.[data.jurusan?.toLowerCase()] &&
+          data.rencana_mulai.startsWith(yearMonth)
       );
-      dataApplicationFilter = [
-        ...dataApplicationFilter,
-        ...dataApplicationAdditional,
+
+      applicantsForField = [
+        ...applicantsForField,
+        ...additionalApplicants,
       ].slice(0, jumlah);
     }
 
-    let normalizedData = dataApplicationFilter.map((d) => ({
-      ...d,
-      IPK: normalizeIPK(parseFloat(d.IPK)),
-      tipe_magang: kategoriMagangMapping[d.tipe_magang] || 0.5,
-      jurusan: jurusanMapping[bidang]?.[d.jurusan] || 0.2,
-      skor_CV: (parseFloat(d.skor_CV) ?? 0) / 100,
-      skor_motivation_letter: (parseFloat(d.skor_motivation_letter) ?? 0) / 100,
-    }));
+    if (applicantsForField.length === 0) {
+      console.log(`No suitable applicants found for ${bidang}`);
+      continue;
+    }
 
-    let rankedData = normalizedData
-      .map((d) => ({
+    const normalizedData = applicantsForField.map((d) => {
+      const jurusanScore =
+        jurusanMapping[bidang]?.[d.jurusan?.toLowerCase()] || 0.2;
+
+      return {
         ...d,
-        score:
+        IPK: normalizeIPK(parseFloat(d.IPK)),
+        tipe_magang: kategoriMagangMapping[d.tipe_magang] || 0.5,
+        jurusan: jurusanScore,
+        skor_CV: (parseFloat(d.skor_CV) ?? 0) / 100,
+        skor_motivation_letter:
+          (parseFloat(d.skor_motivation_letter) ?? 0) / 100,
+      };
+    });
+
+    const rankedData = normalizedData
+      .map((d) => {
+        const total_skor =
           d.IPK * dataWeight.bobot_IPK +
           d.tipe_magang * dataWeight.bobot_tipe_magang +
           d.jurusan * dataWeight.bobot_jurusan +
           d.skor_CV * dataWeight.bobot_skor_CV +
-          d.skor_motivation_letter * dataWeight.bobot_skor_motivation_letter,
-      }))
-      .sort((a, b) => b.score - a.score);
+          d.skor_motivation_letter * dataWeight.bobot_skor_motivation_letter;
 
-    let selected = rankedData.slice(0, jumlah);
-    results.push(...selected);
+        return { ...d, total_skor };
+      })
+      .sort((a, b) => b.total_skor - a.total_skor);
+
+    const selected = rankedData.slice(0, jumlah);
+
+    selected.forEach((s) => {
+      assignedApplicants.add(s.id);
+
+      posisiPenempatan[s.id] = {
+        bidang_penempatan: bidang,
+      };
+    });
+
+    selectedCandidates.push(...selected);
   }
 
-  // await SAWRepo.saveSAW_Result(results);
+  const formattedResults = selectedCandidates.map((selected) => ({
+    id: uuidv4(),
+    application_id: selected.id,
+    full_name: selected.nama_lengkap,
+    email: selected.email,
+    start_month: selected.rencana_mulai,
+    accepted_division: posisiPenempatan[selected.id].bidang_penempatan,
+    IPK_score: selected.IPK,
+    intern_category_score: selected.tipe_magang,
+    college_major_score: selected.jurusan,
+    CV_score: selected.skor_CV,
+    motivation_letter_score: selected.skor_motivation_letter,
+    total_score: selected.total_skor,
+  }));
 
-  return results;
+  if (formattedResults.length > 0) {
+    await SAWRepo.saveSAW_Result(formattedResults);
+  }
+
+  if (formattedResults.length === 0) {
+    return null;
+  }
+
+  return formattedResults;
 };
