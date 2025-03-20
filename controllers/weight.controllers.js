@@ -2,12 +2,12 @@ const weightUseCase = require('../usecases/weight.usecases');
 const yup = require('yup');
 
 const schema = yup.object().shape({
-  nama: yup.string().required('Nama bobot wajib diisi'),
-  bobot_IPK: yup.number().required('Bobot IPK wajib diisi'),
-  bobot_tipe_magang: yup.number('Bobot tipe magang wajib diisi'),
-  bobot_jurusan: yup.number('Bobot jurusan wajib diisi'),
-  bobot_skor_CV: yup.number('Bobot skor CV wajib diisi'),
-  bobot_skor_motivation_letter: yup.number(
+  name: yup.string().required('Nama bobot wajib diisi'),
+  IPK_weight: yup.number().required('Bobot IPK wajib diisi'),
+  intern_category_weight: yup.number('Bobot tipe magang wajib diisi'),
+  college_major_weight: yup.number('Bobot jurusan wajib diisi'),
+  CV_score_weight: yup.number('Bobot skor CV wajib diisi'),
+  motivation_letter_score_weight: yup.number(
     'Bobot skor motivation letter Magang wajib diisi'
   ),
 });
@@ -41,10 +41,10 @@ exports.getWeight = async (req, res, next) => {
     const data = await weightUseCase.getWeight(id);
 
     if (!data) {
-      return next({
+      res.status(404).json({
         success: false,
-        message: `Data bobot tidak ditemukan`,
-        statusCode: 404,
+        message: 'Data bobot tidak ditemukan',
+        data,
       });
     }
 

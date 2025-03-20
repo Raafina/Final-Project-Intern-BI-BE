@@ -13,12 +13,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   weight.init(
     {
-      nama: DataTypes.STRING,
-      bobot_IPK: DataTypes.FLOAT,
-      bobot_tipe_magang: DataTypes.FLOAT,
-      bobot_jurusan: DataTypes.FLOAT,
-      bobot_skor_CV: DataTypes.FLOAT,
-      bobot_skor_motivation_letter: DataTypes.FLOAT,
+      name: DataTypes.STRING,
+      IPK_weight: DataTypes.FLOAT,
+      intern_category_weight: DataTypes.FLOAT,
+      college_major_weight: DataTypes.FLOAT,
+      CV_score_weight: DataTypes.FLOAT,
+      motivation_letter_score_weight: DataTypes.FLOAT,
     },
     {
       sequelize,

@@ -18,38 +18,19 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true,
       },
-      nama_lengkap: {
+      full_name: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
-      bidang_kerja: {
-        type: DataTypes.ENUM(
-          'Moneter',
-          'Makroprudensial',
-          'Sistem Pembayaran',
-          'Pengelolaan Uang Rupiah',
-          'Humas',
-          'Internal'
-        ),
         allowNull: false,
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      no_hp: {
+      phone: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      universitas: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      tipe_magang: {
-        type: DataTypes.ENUM('Magang Mandiri', 'Magang KRS'),
-        allowNull: false,
-      },
-      semester: {
+      university: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -57,7 +38,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
-      jurusan: {
+      intern_category: {
+        type: DataTypes.ENUM('magang_mandiri', 'magang_KRS'),
+        allowNull: false,
+      },
+      college_major: {
         type: DataTypes.ENUM(
           'Ekonomi',
           'Akuntansi',
@@ -68,25 +53,40 @@ module.exports = (sequelize, DataTypes) => {
         ),
         allowNull: false,
       },
-      rencana_mulai: {
+      division_request: {
+        type: DataTypes.ENUM(
+          'Moneter',
+          'Makroprudensial',
+          'Sistem Pembayaran',
+          'Pengelolaan Uang Rupiah',
+          'Humas',
+          'Internal'
+        ),
+        allowNull: false,
+      },
+      CV_score: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
+      motivation_letter_score: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
+      semester: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      start_month: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      rencana_selesai: {
+      end_month: {
         type: DataTypes.DATE,
         allowNull: false,
       },
       google_drive_link: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      skor_CV: {
-        type: DataTypes.FLOAT,
-        allowNull: true,
-      },
-      skor_motivation_letter: {
-        type: DataTypes.FLOAT,
-        allowNull: true,
       },
     },
     {

@@ -6,13 +6,11 @@ exports.getSAW_Results = async (rencana_mulai) => {
       rencana_mulai,
     },
   });
-
   return data;
 };
 
 exports.saveSAW_Result = async (payload) => {
   const data = await SAW_Result.bulkCreate(payload);
-
   return data;
 };
 
@@ -22,7 +20,6 @@ exports.updateSAW_Result = async (application_id, payload) => {
       application_id,
     },
   });
-
   return data;
 };
 

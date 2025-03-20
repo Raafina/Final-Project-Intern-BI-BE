@@ -1,17 +1,18 @@
 const applicationUseCase = require('../usecases/application.usecases');
+
 const yup = require('yup');
 
 const schema = yup.object().shape({
-  nama_lengkap: yup.string().required('Nama lengkap wajib diisi'),
-  universitas: yup.string().required('Asal Universitas wajib diisi'),
+  full_name: yup.string().required('Nama lengkap wajib diisi'),
+  university: yup.string().required('Asal Universitas wajib diisi'),
   email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
-  no_hp: yup.string().required('No. HP wajib diisi'),
-  tipe_magang: yup
+  phone: yup.string().required('No. HP wajib diisi'),
+  intern_category: yup
     .string()
     .oneOf(['magang_KRS', 'magang_mandiri'], 'Tipe magang tidak valid')
     .required('Tipe magang wajib diisi'),
   semester: yup.number().min(1, 'Minimal Semester 4').required(),
-  bidang_kerja: yup
+  division_request: yup
     .string()
     .oneOf(
       [
@@ -26,30 +27,27 @@ const schema = yup.object().shape({
     )
     .required('Bidang Peminatan wajib diisi'),
   IPK: yup.number().required('IPK wajib diisi'),
-  jurusan: yup
+  college_major: yup
     .string()
     .oneOf(
       ['akuntansi', 'manajemen', 'IT', 'hukum', 'statistika', 'ilmu_sosial'],
       'Jurusan tidak valid'
     )
     .required('Jurusan wajib diisi'),
-  rencana_mulai: yup.date().required('Tanggal rencana mulai wajib diisi'),
-  rencana_selesai: yup
+  start_month: yup.date().required('Tanggal rencana mulai wajib diisi'),
+  end_month: yup
     .date()
-    .min(
-      yup.ref('rencana_mulai'),
-      'Tanggal selesai harus setelah tanggal mulai'
-    )
+    .min(yup.ref('start_month'), 'Tanggal selesai harus setelah tanggal mulai')
     .test(
       'max-6-months',
       'Tanggal selesai tidak boleh lebih dari 6 bulan dari tanggal mulai',
       function (value) {
-        if (!this.parent.rencana_mulai || !value) return true;
-        const mulai = new Date(this.parent.rencana_mulai);
-        const maksimalSelesai = new Date(mulai);
-        maksimalSelesai.setMonth(mulai.getMonth() + 6);
+        if (!this.parent.start_month || !value) return true;
+        const start = new Date(this.parent.start_month);
+        const maxEnd = new Date(start);
+        maxEnd.setMonth(start.getMonth() + 6);
 
-        return value <= maksimalSelesai;
+        return value <= maxEnd;
       }
     )
     .required('Tanggal rencana selesai wajib diisi'),
@@ -57,14 +55,14 @@ const schema = yup.object().shape({
     .string()
     .url('Harus berupa link valid')
     .required('Link Google Drive wajib diisi'),
-  skor_CV: yup.number().min(0).max(100).nullable(),
-  skor_motivation_letter: yup.number().min(0).max(100).nullable(),
+  CV_score: yup.number().min(0).max(100).nullable(),
+  motivation_letter_score: yup.number().min(0).max(100).nullable(),
 });
 
 exports.getApplications = async (req, res, next) => {
   try {
     const { month, year, page, limit, sort, sortBy, search } = req.query;
-    const applications = await applicationUseCase.getApplications({
+    const data = await applicationUseCase.getApplications({
       month: month ? parseInt(month) : null,
       year: year ? parseInt(year) : null,
       page: parseInt(page) || 1,
@@ -74,11 +72,19 @@ exports.getApplications = async (req, res, next) => {
       search,
     });
 
+    if (!data.data.length) {
+      res.status(404).json({
+        success: false,
+        message: 'Data pendaftar tidak ditemukan',
+        data: data.data,
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: 'Data pendaftar ditemukan',
-      data: applications.data,
-      pagination: applications.pagination,
+      data: data.data,
+      pagination: data.pagination,
     });
   } catch (error) {
     next(error);
@@ -92,10 +98,10 @@ exports.getApplicationById = async (req, res, next) => {
     const data = await applicationUseCase.getApplication(id);
 
     if (!data) {
-      return next({
-        statusCode: 404,
+      res.status(404).json({
         success: false,
         message: 'Data pendaftar tidak ditemukan',
+        data,
       });
     } else {
       res.status(200).json({
@@ -111,14 +117,23 @@ exports.getApplicationById = async (req, res, next) => {
 
 exports.getApplicationByStartDate = async (req, res, next) => {
   try {
-    const { rencana_mulai } = req.body;
-    const results = await applicationUseCase.getApplicationByStartDate(
-      rencana_mulai
+    const { start_month } = req.body;
+    const data = await applicationUseCase.getApplicationByStartDate(
+      start_month
     );
 
+    if (!data) {
+      res.status(404).json({
+        success: false,
+        message: 'Data pendaftar tidak ditemukan',
+        data,
+      });
+    }
+
     res.status(200).json({
-      message: 'Data berhasil dieksekusi dengan SAW!',
-      data: results,
+      success: true,
+      message: 'Data pendaftar ditemukan',
+      data,
     });
   } catch (error) {
     next(error);

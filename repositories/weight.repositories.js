@@ -12,14 +12,14 @@ exports.getWeights = async ({ page, limit, sort, sortBy, search }) => {
     where: filter,
     attributes: [
       'id',
-      'nama',
-      'bobot_IPK',
-      'bobot_tipe_magang',
-      'bobot_jurusan',
-      'bobot_skor_CV',
-      'bobot_skor_motivation_letter',
+      'name',
+      'IPK_weight',
+      'intern_category_weight',
+      'college_major_weight',
+      'CV_score_weight',
+      'motivation_letter_score_weight',
     ],
-    order: [[sortBy || 'nama', sort || 'asc']],
+    order: [[sortBy || 'name', sort || 'asc']],
     offset: (page - 1) * limit,
     limit,
   });
@@ -28,6 +28,21 @@ exports.getWeights = async ({ page, limit, sort, sortBy, search }) => {
     totalItems,
     totalPages: Math.ceil(totalItems / limit),
   };
+};
+
+exports.getWeightName = async (name, excludeId = null) => {
+  const whereClause = {
+    name,
+  };
+
+  if (excludeId) {
+    whereClause.id = { [Op.ne]: excludeId };
+  }
+
+  return weight.findOne({
+    where: whereClause,
+    attributes: ['id'],
+  });
 };
 
 exports.getWeightById = async (id) => {
@@ -40,7 +55,7 @@ exports.getWeightById = async (id) => {
     return data[0];
   }
 
-  return 'Data tidak ditemukan';
+  return null;
 };
 
 exports.createWeight = async (payload) => {

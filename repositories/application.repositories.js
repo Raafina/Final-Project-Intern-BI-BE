@@ -1,6 +1,7 @@
 const { application } = require('../models');
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
+
 exports.getApplications = async ({
   month,
   year,
@@ -12,16 +13,15 @@ exports.getApplications = async ({
 }) => {
   const filter = {};
 
-  // Filter berdasarkan bulan & tahun rencana_mulai
   if (month && year) {
-    filter.rencana_mulai = {
-      [Op.gte]: new Date(year, month - 1, 1), // Awal bulan
-      [Op.lt]: new Date(year, month, 1), // Awal bulan berikutnya
+    filter.start_month = {
+      [Op.gte]: new Date(year, month - 1, 1),
+      [Op.lt]: new Date(year, month, 1),
     };
   }
 
   if (search) {
-    filter.nama_lengkap = { [Op.iLike]: `%${search}%` };
+    filter.full_name = { [Op.iLike]: `%${search}%` };
   }
 
   const totalItems = await application.count({ where: filter });
@@ -30,17 +30,17 @@ exports.getApplications = async ({
     where: filter,
     attributes: [
       'id',
-      'nama_lengkap',
-      'bidang_kerja',
-      'rencana_mulai',
+      'full_name',
+      'division_request',
+      'start_month',
       'IPK',
-      'tipe_magang',
-      'jurusan',
+      'intern_category',
+      'college_major',
       'google_drive_link',
-      'skor_motivation_letter',
-      'skor_CV',
+      'motivation_letter_score',
+      'CV_score',
     ],
-    order: [[sortBy || 'nama_lengkap', sort || 'asc']],
+    order: [[sortBy || 'full_name', sort || 'asc']],
     offset: (page - 1) * limit,
     limit: limit,
   });
@@ -62,11 +62,41 @@ exports.getApplicationById = async (id) => {
     return data[0];
   }
 
-  return 'Data tidak ditemukan';
+  return null;
 };
 
-exports.getApplicationByStartDate = async (rencana_mulai) => {
-  const date = new Date(rencana_mulai);
+exports.getApplicationEmail = async (email, excludeId = null) => {
+  const whereClause = {
+    email,
+  };
+
+  if (excludeId) {
+    whereClause.id = { [Op.ne]: excludeId };
+  }
+
+  return application.findOne({
+    where: whereClause,
+    attributes: ['id'],
+  });
+};
+
+exports.getApplicationPhone = async (phone, excludeId = null) => {
+  const whereClause = {
+    phone,
+  };
+
+  if (excludeId) {
+    whereClause.id = { [Op.ne]: excludeId };
+  }
+
+  return application.findOne({
+    where: whereClause,
+    attributes: ['id'],
+  });
+};
+
+exports.getApplicationByStartDate = async (start_month) => {
+  const date = new Date(start_month);
   const year = date.getFullYear();
   const month = date.getMonth();
 
@@ -76,7 +106,7 @@ exports.getApplicationByStartDate = async (rencana_mulai) => {
 
   const data = await application.findAll({
     where: {
-      rencana_mulai: {
+      start_month: {
         [Op.between]: [startOfMonth, endOfMonth],
       },
     },
@@ -86,12 +116,13 @@ exports.getApplicationByStartDate = async (rencana_mulai) => {
     return data;
   }
 
-  return 'Data tidak ditemukan';
+  return null;
 };
 
 exports.createApplication = async (payload) => {
   payload.id = uuidv4();
   const data = await application.create(payload);
+
   return data;
 };
 

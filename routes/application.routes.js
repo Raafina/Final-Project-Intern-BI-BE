@@ -14,7 +14,7 @@ router
   .delete(authMiddleware('admin'), applicationControllers.deleteApplication);
 
 router
-  .route('/detail')
+  .route('/start-date')
   .post(
     authMiddleware('admin'),
     applicationControllers.getApplicationByStartDate

@@ -4,12 +4,12 @@ const SAWRepo = require('../repositories/saw.repositories');
 const { v4: uuidv4 } = require('uuid');
 const { col } = require('sequelize');
 
-const kategoriMagangMapping = {
+const intern_category_mapping = {
   magang_mandiri: 0.8,
   magang_KRS: 1.0,
 };
 
-const jurusanMapping = {
+const college_major_mapping = {
   moneter: {
     akuntansi: 1.0,
     manajemen: 0.9,
@@ -63,24 +63,19 @@ const jurusanMapping = {
 // Normalize IPK to a scale of 0 to 1
 const normalizeIPK = (ipk) => ipk / 4.0;
 
-exports.calculate = async (
-  rencana_mulai,
-  weight_id,
-  kebutuhan_bidang_kerja
-) => {
+exports.calculate = async (start_month, weight_id, division_quota) => {
   const [dataApplicationRaw, dataWeightInstance] = await Promise.all([
-    applicationRepo.getApplicationByStartDate(rencana_mulai),
+    applicationRepo.getApplicationByStartDate(start_month),
     weightRepo.getWeightById(weight_id),
   ]);
   console.log(dataApplicationRaw, 'cek');
 
-  if (
-    !dataApplicationRaw ||
-    !dataWeightInstance ||
-    dataApplicationRaw === 'Data tidak ditemukan' ||
-    dataWeightInstance === 'Data tidak ditemukan'
-  ) {
-    throw new Error('Data tidak ditemukan');
+  if (!dataWeightInstance || dataWeightInstance === 'Data tidak ditemukan') {
+    throw new Error('Data bobot tidak ditemukan');
+  }
+
+  if (!dataApplicationRaw || dataApplicationRaw === 'Data tidak ditemukan') {
+    throw new Error('Data pendaftar tidak ditemukan');
   }
 
   const dataApplication = dataApplicationRaw.map(
@@ -96,18 +91,18 @@ exports.calculate = async (
   const assignedApplicants = new Set();
   const selectedCandidates = [];
 
-  const posisiPenempatan = {};
+  const division_accepted = {};
 
-  for (const [bidang, jumlah] of Object.entries(kebutuhan_bidang_kerja)) {
-    if (jumlah <= 0 || !jurusanMapping[bidang]) continue;
+  for (const [division, jumlah] of Object.entries(division_quota)) {
+    if (jumlah <= 0 || !college_major_mapping[division]) continue;
 
-    const yearMonth = rencana_mulai.substring(0, 7); // YYYY-MM format
+    const yearMonth = start_month.substring(0, 7); // YYYY-MM format
 
     let applicantsForField = dataApplication.filter(
       (item) =>
-        item.bidang_kerja === bidang &&
+        item.division_kerja === division &&
         !assignedApplicants.has(item.id) &&
-        item.rencana_mulai.startsWith(yearMonth)
+        item.start_month.startsWith(yearMonth)
     );
 
     if (applicantsForField.length < jumlah) {
@@ -115,8 +110,10 @@ exports.calculate = async (
         (data) =>
           !applicantsForField.includes(data) &&
           !assignedApplicants.has(data.id) &&
-          jurusanMapping[bidang]?.[data.jurusan?.toLowerCase()] &&
-          data.rencana_mulai.startsWith(yearMonth)
+          college_major_mapping[division]?.[
+            data.college_major?.toLowerCase()
+          ] &&
+          data.start_month.startsWith(yearMonth)
       );
 
       applicantsForField = [
@@ -126,45 +123,46 @@ exports.calculate = async (
     }
 
     if (applicantsForField.length === 0) {
-      console.log(`No suitable applicants found for ${bidang}`);
+      console.log(`No suitable applicants found for ${division}`);
       continue;
     }
 
     const normalizedData = applicantsForField.map((d) => {
-      const jurusanScore =
-        jurusanMapping[bidang]?.[d.jurusan?.toLowerCase()] || 0.2;
+      const college_major_score =
+        college_major_mapping[division]?.[d.college_major?.toLowerCase()] ||
+        0.2;
 
       return {
         ...d,
         IPK: normalizeIPK(parseFloat(d.IPK)),
-        tipe_magang: kategoriMagangMapping[d.tipe_magang] || 0.5,
-        jurusan: jurusanScore,
-        skor_CV: (parseFloat(d.skor_CV) ?? 0) / 100,
-        skor_motivation_letter:
-          (parseFloat(d.skor_motivation_letter) ?? 0) / 100,
+        intern_category: intern_category_mapping[d.intern_category] || 0.5,
+        college_major: college_major_score,
+        CV_score: (parseFloat(d.CV_score) ?? 0) / 100,
+        motivation_letter_score:
+          (parseFloat(d.motivation_letter_score) ?? 0) / 100,
       };
     });
 
     const rankedData = normalizedData
       .map((d) => {
-        const total_skor =
-          d.IPK * dataWeight.bobot_IPK +
-          d.tipe_magang * dataWeight.bobot_tipe_magang +
-          d.jurusan * dataWeight.bobot_jurusan +
-          d.skor_CV * dataWeight.bobot_skor_CV +
-          d.skor_motivation_letter * dataWeight.bobot_skor_motivation_letter;
+        const total_score =
+          d.IPK * dataWeight.IPK_weight +
+          d.intern_category * dataWeight.intern_category_weight +
+          d.college_major * dataWeight.college_major_weight +
+          d.CV_score * dataWeight.CV_score_weight +
+          d.motivation_letter_score * dataWeight.motivation_letter_score_weight;
 
-        return { ...d, total_skor };
+        return { ...d, total_score };
       })
-      .sort((a, b) => b.total_skor - a.total_skor);
+      .sort((a, b) => b.total_score - a.total_score);
 
     const selected = rankedData.slice(0, jumlah);
 
     selected.forEach((s) => {
       assignedApplicants.add(s.id);
 
-      posisiPenempatan[s.id] = {
-        bidang_penempatan: bidang,
+      division_accepted[s.id] = {
+        division_category: division,
       };
     });
 
@@ -174,16 +172,16 @@ exports.calculate = async (
   const formattedResults = selectedCandidates.map((selected) => ({
     id: uuidv4(),
     application_id: selected.id,
-    full_name: selected.nama_lengkap,
+    full_name: selected.full_name,
     email: selected.email,
-    start_month: selected.rencana_mulai,
-    accepted_division: posisiPenempatan[selected.id].bidang_penempatan,
+    start_month: selected.start_month,
+    accepted_division: division_accepted[selected.id].division_category,
     IPK_score: selected.IPK,
-    intern_category_score: selected.tipe_magang,
-    college_major_score: selected.jurusan,
-    CV_score: selected.skor_CV,
-    motivation_letter_score: selected.skor_motivation_letter,
-    total_score: selected.total_skor,
+    intern_category_score: selected.intern_category,
+    college_major_score: selected.college_major,
+    CV_score: selected.CV_score,
+    motivation_letter_score: selected.motivation_letter_score,
+    total_score: selected.total_score,
   }));
 
   if (formattedResults.length > 0) {

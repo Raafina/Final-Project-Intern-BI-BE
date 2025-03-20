@@ -9,28 +9,28 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
-      nama: {
+      name: {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
       },
-      bobot_IPK: {
+      IPK_weight: {
         allowNull: false,
         type: Sequelize.FLOAT,
       },
-      bobot_tipe_magang: {
+      intern_category_weight: {
         allowNull: false,
         type: Sequelize.FLOAT,
       },
-      bobot_jurusan: {
+      college_major_weight: {
         allowNull: false,
         type: Sequelize.FLOAT,
       },
-      bobot_skor_CV: {
+      CV_score_weight: {
         allowNull: false,
         type: Sequelize.FLOAT,
       },
-      bobot_skor_motivation_letter: {
+      motivation_letter_score_weight: {
         allowNull: false,
         type: Sequelize.FLOAT,
       },

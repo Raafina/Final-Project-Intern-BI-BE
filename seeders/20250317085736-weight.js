@@ -1,22 +1,23 @@
 'use strict';
+const { col } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const bobotData = Array.from({ length: 15 }, (_, i) => ({
+    const weightData = Array.from({ length: 15 }, (_, i) => ({
       id: uuidv4(),
-      nama: `Bobot ${i + 1}`,
-      bobot_IPK: 0.3,
-      bobot_jurusan: 0.1,
-      bobot_tipe_magang: 0.2,
-      bobot_skor_CV: 0.2,
-      bobot_skor_motivation_letter: 0.2,
+      name: `Bobot ${i + 1}`,
+      IPK_weight: 0.3,
+      college_major_weight: 0.1,
+      intern_category_weight: 0.2,
+      CV_score_weight: 0.2,
+      motivation_letter_score_weight: 0.2,
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
 
-    await queryInterface.bulkInsert('weights', bobotData);
+    await queryInterface.bulkInsert('weights', weightData);
   },
 
   async down(queryInterface, Sequelize) {

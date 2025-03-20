@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
-      nama_lengkap: {
+      full_name: {
         allowNull: false,
         type: Sequelize.STRING,
       },
@@ -18,11 +18,12 @@ module.exports = {
         unique: true,
         type: Sequelize.STRING,
       },
-      no_hp: {
+      phone: {
         allowNull: false,
+        unique: true,
         type: Sequelize.STRING,
       },
-      universitas: {
+      university: {
         allowNull: false,
         type: Sequelize.STRING,
       },
@@ -30,11 +31,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.FLOAT,
       },
-      tipe_magang: {
+      intern_category: {
         allowNull: false,
         type: Sequelize.ENUM(['magang_mandiri', 'magang_KRS']),
       },
-      jurusan: {
+      college_major: {
         allowNull: false,
         type: Sequelize.ENUM([
           'akuntansi',
@@ -45,7 +46,7 @@ module.exports = {
           'ilmu_sosial',
         ]),
       },
-      bidang_kerja: {
+      division_request: {
         allowNull: false,
         type: Sequelize.ENUM([
           'moneter',
@@ -56,11 +57,11 @@ module.exports = {
           'internal',
         ]),
       },
-      skor_CV: {
+      CV_score: {
         allowNull: true,
         type: Sequelize.FLOAT,
       },
-      skor_motivation_letter: {
+      motivation_letter_score: {
         allowNull: true,
         type: Sequelize.FLOAT,
       },
@@ -68,11 +69,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      rencana_mulai: {
+      start_month: {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      rencana_selesai: {
+      end_month: {
         allowNull: false,
         type: Sequelize.STRING,
       },
