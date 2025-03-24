@@ -2,7 +2,7 @@ const applicationUseCase = require('../usecases/application.usecases');
 
 const yup = require('yup');
 
-const schema = yup.object().shape({
+const applicationCreateUpdateSchema = yup.object().shape({
   full_name: yup.string().required('Nama lengkap wajib diisi'),
   university: yup.string().required('Asal Universitas wajib diisi'),
   email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
@@ -141,7 +141,9 @@ exports.getApplicationByStartDate = async (req, res, next) => {
 };
 exports.createApplication = async (req, res, next) => {
   try {
-    await schema.validate(req.body, { abortEarly: false });
+    await applicationCreateUpdateSchema.validate(req.body, {
+      abortEarly: false,
+    });
 
     const data = await applicationUseCase.createApplication(req.body);
 
@@ -154,8 +156,8 @@ exports.createApplication = async (req, res, next) => {
     if (error instanceof yup.ValidationError) {
       return res.status(400).json({
         success: false,
-        message: 'Pendaftaran gagal',
-        errors: error.errors,
+        message: error.errors,
+        data: null,
       });
     }
     next(error);
@@ -164,7 +166,9 @@ exports.createApplication = async (req, res, next) => {
 
 exports.updateAppliaction = async (req, res, next) => {
   try {
-    await schema.validate(req.body, { abortEarly: false });
+    await applicationCreateUpdateSchema.validate(req.body, {
+      abortEarly: false,
+    });
 
     const { id } = req.params;
     const data = await applicationUseCase.updateApplication(id, req.body);
@@ -178,8 +182,8 @@ exports.updateAppliaction = async (req, res, next) => {
     if (error instanceof yup.ValidationError) {
       return res.status(400).json({
         success: false,
-        message: 'Data gagal diperbarui',
-        errors: error.errors,
+        message: error.errors,
+        data: null,
       });
     }
     next(error);

@@ -72,8 +72,8 @@ exports.createWeight = async (req, res, next) => {
     if (error instanceof yup.ValidationError) {
       return res.status(400).json({
         success: false,
-        message: 'Data bobot gagal dibuat',
-        errors: error.errors,
+        data: null,
+        message: error.errors,
       });
     }
     next(error);
@@ -96,8 +96,8 @@ exports.updateWeight = async (req, res, next) => {
     if (error instanceof yup.ValidationError) {
       return res.status(400).json({
         success: false,
-        message: 'Data bobot gagal diperbarui',
-        errors: error.errors,
+        data: null,
+        message: error.errors,
       });
     }
     next(error);
