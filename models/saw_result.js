@@ -38,6 +38,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      IPK: {
+        allowNull: false,
+        type: DataTypes.FLOAT,
+      },
+      intern_category: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
+      college_major: {
+        allowNull: false,
+        type: DataTypes.STRING,
+      },
       IPK_score: {
         allowNull: false,
         type: DataTypes.FLOAT,

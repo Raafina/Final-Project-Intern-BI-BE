@@ -16,6 +16,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      IPK: {
+        allowNull: false,
+        type: Sequelize.FLOAT,
+      },
+      intern_category: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
+      college_major: {
+        allowNull: false,
+        type: Sequelize.STRING,
+      },
       start_month: {
         allowNull: false,
         type: Sequelize.DATE,

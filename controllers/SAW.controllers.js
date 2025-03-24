@@ -16,3 +16,34 @@ exports.calculate = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getSAW_Results = async (req, res, next) => {
+  try {
+    const { start_date, page, limit, sort, sortBy, search } = req.query;
+    const data = await SAWUseCase.getSAW_Results({
+      start_date,
+      page: parseInt(page) || 1,
+      limit: parseInt(limit) || 10,
+      sort,
+      sortBy,
+      search,
+    });
+
+    if (!data.data.length) {
+      res.status(404).json({
+        success: false,
+        message: 'Data hasil seleksi tidak ditemukan',
+        data: data.data,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Data pendaftar ditemukan',
+      data: data.data,
+      pagination: data.pagination,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

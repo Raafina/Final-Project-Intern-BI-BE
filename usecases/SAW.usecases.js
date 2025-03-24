@@ -134,6 +134,9 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
 
       return {
         ...d,
+        original_IPK: d.IPK,
+        original_intern_category: d.intern_category,
+        original_college_major: d.college_major,
         IPK: normalizeIPK(parseFloat(d.IPK)),
         intern_category: intern_category_mapping[d.intern_category] || 0.5,
         college_major: college_major_score,
@@ -176,6 +179,9 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
     email: selected.email,
     start_month: selected.start_month,
     accepted_division: division_accepted[selected.id].division_category,
+    IPK: selected.original_IPK,
+    intern_category: selected.original_intern_category,
+    college_major: selected.original_college_major,
     IPK_score: selected.IPK,
     intern_category_score: selected.intern_category,
     college_major_score: selected.college_major,
@@ -183,6 +189,7 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
     motivation_letter_score: selected.motivation_letter_score,
     total_score: selected.total_score,
   }));
+  console.log(formattedResults);
 
   if (formattedResults.length > 0) {
     await SAWRepo.saveSAW_Result(formattedResults);
@@ -193,4 +200,30 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
   }
 
   return formattedResults;
+};
+
+exports.getSAW_Results = async ({
+  start_date,
+  page = 1,
+  limit = 10,
+  sort = 'asc',
+  sortBy = 'full_name',
+  search = '',
+}) => {
+  const { data, totalItems, totalPages } = await SAWRepo.getSAW_Results({
+    page: parseInt(page),
+    limit: parseInt(limit),
+    sort,
+    sortBy,
+    search,
+  });
+
+  return {
+    data,
+    pagination: {
+      totalItems,
+      totalPages,
+      currentPage: page,
+    },
+  };
 };
