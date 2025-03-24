@@ -19,9 +19,10 @@ exports.calculate = async (req, res, next) => {
 
 exports.getSAW_Results = async (req, res, next) => {
   try {
-    const { start_date, page, limit, sort, sortBy, search } = req.query;
+    const { month, year, page, limit, sort, sortBy, search } = req.query;
     const data = await SAWUseCase.getSAW_Results({
-      start_date,
+      month: month ? parseInt(month) : null,
+      year: year ? parseInt(year) : null,
       page: parseInt(page) || 1,
       limit: parseInt(limit) || 10,
       sort,

@@ -203,7 +203,8 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
 };
 
 exports.getSAW_Results = async ({
-  start_date,
+  month,
+  year,
   page = 1,
   limit = 10,
   sort = 'asc',
@@ -211,6 +212,8 @@ exports.getSAW_Results = async ({
   search = '',
 }) => {
   const { data, totalItems, totalPages } = await SAWRepo.getSAW_Results({
+    month,
+    year,
     page: parseInt(page),
     limit: parseInt(limit),
     sort,

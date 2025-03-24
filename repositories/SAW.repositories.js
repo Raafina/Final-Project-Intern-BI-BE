@@ -1,13 +1,23 @@
 const { SAW_Result } = require('../models');
-
+const { Op } = require('sequelize');
 exports.getSAW_Results = async ({
-  start_date,
+  month,
+  year,
   page,
   limit,
   sort,
   sortBy,
   search,
 }) => {
+  const filter = {};
+
+  if (month && year) {
+    filter.start_month = {
+      [Op.gte]: new Date(year, month - 1, 1),
+      [Op.lt]: new Date(year, month, 1),
+    };
+  }
+
   if (search) {
     filter.full_name = { [Op.iLike]: `%${search}%` };
   }
@@ -19,12 +29,14 @@ exports.getSAW_Results = async ({
     attributes: [
       'id',
       'full_name',
+      'accepted_division',
+      'college_major',
       'start_month',
       'IPK',
       'intern_category',
-      'college_major',
-      'division_request',
-      'google_drive_link',
+      'CV_score',
+      'motivation_letter_score',
+      'total_score',
     ],
     order: [[sortBy || 'full_name', sort || 'asc']],
     offset: (page - 1) * limit,
