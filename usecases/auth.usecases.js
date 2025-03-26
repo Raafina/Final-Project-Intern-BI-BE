@@ -23,7 +23,7 @@ exports.login = async (email, password) => {
   };
 
   const token = jsonwebtoken.sign(jwtPayload, process.env.JWT_SECRET, {
-    expiresIn: '1h',
+    expiresIn: '20h',
   });
 
   const data = {
