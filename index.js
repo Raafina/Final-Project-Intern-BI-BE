@@ -1,19 +1,19 @@
-const express = require('express');
-const router = require('./routes');
-const cors = require('cors');
+const express = require("express");
+const router = require("./routes");
+const cors = require("cors");
 const app = express();
 const port = 3010;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static("public"));
 
-app.use('/api', router);
+app.use("/api", router);
 
 // Error middleware
 app.use((err, req, res, next) => {
   let statusCode = 500;
-  let message = 'Internal Server Error';
+  let message = "Internal Server Error";
 
   if (err.statusCode) {
     statusCode = err.statusCode;

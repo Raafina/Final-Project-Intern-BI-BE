@@ -1,46 +1,46 @@
-const applicationUseCase = require('../usecases/application.usecases');
+const applicationUseCase = require("../usecases/application.usecases");
 
-const yup = require('yup');
+const yup = require("yup");
 
 const applicationCreateUpdateSchema = yup.object().shape({
-  full_name: yup.string().required('Nama lengkap wajib diisi'),
-  university: yup.string().required('Asal Universitas wajib diisi'),
-  email: yup.string().email('Email tidak valid').required('Email wajib diisi'),
-  phone: yup.string().required('No. HP wajib diisi'),
+  full_name: yup.string().required("Nama lengkap wajib diisi"),
+  university: yup.string().required("Asal Universitas wajib diisi"),
+  email: yup.string().email("Email tidak valid").required("Email wajib diisi"),
+  phone: yup.string().required("No. HP wajib diisi"),
   intern_category: yup
     .string()
-    .oneOf(['magang_KRS', 'magang_mandiri'], 'Tipe magang tidak valid')
-    .required('Tipe magang wajib diisi'),
-  semester: yup.number().min(1, 'Minimal Semester 4').required(),
+    .oneOf(["Magang KRS", "Magang Mandiri"], "Tipe magang tidak valid")
+    .required("Tipe magang wajib diisi"),
+  semester: yup.number().min(1, "Minimal Semester 4").required(),
   division_request: yup
     .string()
     .oneOf(
       [
-        'moneter',
-        'makroprudensial',
-        'sistem_pembayaran',
-        'pengelolaan_uang_rupiah',
-        'humas',
-        'internal',
+        "Moneter",
+        "Makroprudensial",
+        "Sistem Pembayaran",
+        "Pengelolaan Uang Rupiah",
+        "Humas",
+        "Internal",
       ],
-      'Bidang Peminatan tidak valid'
+      "Bidang Peminatan tidak valid"
     )
-    .required('Bidang Peminatan wajib diisi'),
-  IPK: yup.number().required('IPK wajib diisi'),
+    .required("Bidang Peminatan wajib diisi"),
+  IPK: yup.number().required("IPK wajib diisi"),
   college_major: yup
     .string()
     .oneOf(
-      ['akuntansi', 'manajemen', 'IT', 'hukum', 'statistika', 'ilmu_sosial'],
-      'Jurusan tidak valid'
+      ["akuntansi", "manajemen", "IT", "hukum", "statistika", "ilmu_sosial"],
+      "Jurusan tidak valid"
     )
-    .required('Jurusan wajib diisi'),
-  start_month: yup.date().required('Tanggal rencana mulai wajib diisi'),
+    .required("Jurusan wajib diisi"),
+  start_month: yup.date().required("Tanggal rencana mulai wajib diisi"),
   end_month: yup
     .date()
-    .min(yup.ref('start_month'), 'Tanggal selesai harus setelah tanggal mulai')
+    .min(yup.ref("start_month"), "Tanggal selesai harus setelah tanggal mulai")
     .test(
-      'max-6-months',
-      'Tanggal selesai tidak boleh lebih dari 6 bulan dari tanggal mulai',
+      "max-6-months",
+      "Tanggal selesai tidak boleh lebih dari 6 bulan dari tanggal mulai",
       function (value) {
         if (!this.parent.start_month || !value) return true;
         const start = new Date(this.parent.start_month);
@@ -50,11 +50,11 @@ const applicationCreateUpdateSchema = yup.object().shape({
         return value <= maxEnd;
       }
     )
-    .required('Tanggal rencana selesai wajib diisi'),
+    .required("Tanggal rencana selesai wajib diisi"),
   google_drive_link: yup
     .string()
-    .url('Harus berupa link valid')
-    .required('Link Google Drive wajib diisi'),
+    .url("Harus berupa link valid")
+    .required("Link Google Drive wajib diisi"),
   CV_score: yup.number().min(0).max(100).nullable(),
   motivation_letter_score: yup.number().min(0).max(100).nullable(),
 });
@@ -75,14 +75,14 @@ exports.getApplications = async (req, res, next) => {
     if (!data.data.length) {
       res.status(404).json({
         success: false,
-        message: 'Data pendaftar tidak ditemukan',
+        message: "Data pendaftar tidak ditemukan",
         data: data.data,
       });
     }
 
     res.status(200).json({
       success: true,
-      message: 'Data pendaftar ditemukan',
+      message: "Data pendaftar ditemukan",
       data: data.data,
       pagination: data.pagination,
     });
@@ -100,13 +100,13 @@ exports.getApplicationById = async (req, res, next) => {
     if (!data) {
       res.status(404).json({
         success: false,
-        message: 'Data pendaftar tidak ditemukan',
+        message: "Data pendaftar tidak ditemukan",
         data,
       });
     } else {
       res.status(200).json({
         success: true,
-        message: 'Data pendaftar ditemukan',
+        message: "Data pendaftar ditemukan",
         data,
       });
     }
@@ -125,14 +125,14 @@ exports.getApplicationByStartDate = async (req, res, next) => {
     if (!data) {
       res.status(404).json({
         success: false,
-        message: 'Data pendaftar tidak ditemukan',
+        message: "Data pendaftar tidak ditemukan",
         data,
       });
     }
 
     res.status(200).json({
       success: true,
-      message: 'Data pendaftar ditemukan',
+      message: "Data pendaftar ditemukan",
       data,
     });
   } catch (error) {
@@ -149,7 +149,7 @@ exports.createApplication = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: 'Pendaftaran berhasil',
+      message: "Pendaftaran berhasil",
       data,
     });
   } catch (error) {
@@ -175,7 +175,7 @@ exports.updateAppliaction = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Data pendaftar berhasil diperbarui',
+      message: "Data pendaftar berhasil diperbarui",
       data,
     });
   } catch (error) {
@@ -197,7 +197,7 @@ exports.deleteApplication = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Data pendaftar berhasil dihapus',
+      message: "Data pendaftar berhasil dihapus",
       data,
     });
   } catch (error) {

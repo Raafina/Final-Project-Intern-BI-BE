@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('applications', {
+    await queryInterface.createTable("applications", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -33,28 +33,29 @@ module.exports = {
       },
       intern_category: {
         allowNull: false,
-        type: Sequelize.ENUM(['magang_mandiri', 'magang_KRS']),
+        type: Sequelize.ENUM(["Magang Mandiri", "Magang KRS"]),
       },
       college_major: {
         allowNull: false,
         type: Sequelize.ENUM([
-          'akuntansi',
-          'manajemen',
-          'IT',
-          'hukum',
-          'statistika',
-          'ilmu_sosial',
+          "Ekonomi",
+          "Akuntansi",
+          "Manajemen",
+          "IT",
+          "Hukum",
+          "Statistika",
+          "Ilmu Sosial",
         ]),
       },
       division_request: {
         allowNull: false,
         type: Sequelize.ENUM([
-          'moneter',
-          'makroprudensial',
-          'sistem_pembayaran',
-          'pengelolaan_uang_rupiah',
-          'humas',
-          'internal',
+          "Moneter",
+          "Makroprudensial",
+          "Sistem Pembayaran",
+          "Pengelolaan Uang Rupiah",
+          "Humas",
+          "Internal",
         ]),
       },
       CV_score: {
@@ -92,6 +93,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('applications');
+    await queryInterface.dropTable("applications");
   },
 };

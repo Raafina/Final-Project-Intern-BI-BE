@@ -1,22 +1,22 @@
-const router = require('express').Router();
-const applicationControllers = require('../controllers/application.controllers');
-const { authMiddleware } = require('../middlewares/auth.middleware');
+const router = require("express").Router();
+const applicationControllers = require("../controllers/application.controllers");
+const { authMiddleware } = require("../middlewares/auth.middleware");
 
 router
-  .route('/')
-  .get(authMiddleware('admin'), applicationControllers.getApplications)
+  .route("/")
+  .get(authMiddleware("admin"), applicationControllers.getApplications)
   .post(applicationControllers.createApplication);
 
 router
-  .route('/:id')
-  .get(authMiddleware('admin'), applicationControllers.getApplicationById)
-  .put(authMiddleware('admin'), applicationControllers.updateAppliaction)
-  .delete(authMiddleware('admin'), applicationControllers.deleteApplication);
+  .route("/:id")
+  .get(authMiddleware("admin"), applicationControllers.getApplicationById)
+  .put(authMiddleware("admin"), applicationControllers.updateAppliaction)
+  .delete(authMiddleware("admin"), applicationControllers.deleteApplication);
 
 router
-  .route('/start-date')
+  .route("/start-date")
   .post(
-    authMiddleware('admin'),
+    authMiddleware("admin"),
     applicationControllers.getApplicationByStartDate
   );
 

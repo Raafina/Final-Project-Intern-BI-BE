@@ -1,5 +1,5 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class application extends Model {
     /**
@@ -39,28 +39,29 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       intern_category: {
-        type: DataTypes.ENUM('magang_mandiri', 'magang_KRS'),
+        type: DataTypes.ENUM("Magang Mandiri", "Magang KRS"),
         allowNull: false,
       },
       college_major: {
         type: DataTypes.ENUM(
-          'Ekonomi',
-          'Akuntansi',
-          'Manajemen',
-          'IT',
-          'Hukum',
-          'Statistika'
+          "Ekonomi",
+          "Akuntansi",
+          "Manajemen",
+          "IT",
+          "Hukum",
+          "Statistika",
+          "Ilmu Sosial"
         ),
         allowNull: false,
       },
       division_request: {
         type: DataTypes.ENUM(
-          'Moneter',
-          'Makroprudensial',
-          'Sistem Pembayaran',
-          'Pengelolaan Uang Rupiah',
-          'Humas',
-          'Internal'
+          "Moneter",
+          "Makroprudensial",
+          "Sistem Pembayaran",
+          "Pengelolaan Uang Rupiah",
+          "Humas",
+          "Internal"
         ),
         allowNull: false,
       },
@@ -91,7 +92,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'application',
+      modelName: "application",
     }
   );
   return application;

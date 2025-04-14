@@ -1,6 +1,6 @@
-const { weight } = require('../models');
-const { Op } = require('sequelize');
-const { v4: uuidv4 } = require('uuid');
+const { weight } = require("../models");
+const { Op } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
 exports.getWeights = async ({ page, limit, sort, sortBy, search }) => {
   const filter = {};
   if (search) {
@@ -11,15 +11,15 @@ exports.getWeights = async ({ page, limit, sort, sortBy, search }) => {
   const data = await weight.findAll({
     where: filter,
     attributes: [
-      'id',
-      'name',
-      'IPK_weight',
-      'intern_category_weight',
-      'college_major_weight',
-      'CV_score_weight',
-      'motivation_letter_score_weight',
+      "id",
+      "name",
+      "IPK_weight",
+      "intern_category_weight",
+      "college_major_weight",
+      "CV_score_weight",
+      "motivation_letter_score_weight",
     ],
-    order: [[sortBy || 'name', sort || 'asc']],
+    order: [[sortBy || "name", sort || "asc"]],
     offset: (page - 1) * limit,
     limit,
   });
@@ -41,7 +41,7 @@ exports.getWeightName = async (name, excludeId = null) => {
 
   return weight.findOne({
     where: whereClause,
-    attributes: ['id'],
+    attributes: ["id"],
   });
 };
 

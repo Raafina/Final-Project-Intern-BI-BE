@@ -1,6 +1,6 @@
-'use strict';
-const bycrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
+"use strict";
+const bycrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -15,14 +15,14 @@ module.exports = {
      * }], {});
      */
 
-    await queryInterface.bulkInsert('users', [
+    await queryInterface.bulkInsert("users", [
       {
         id: uuidv4(),
-        nama_lengkap: 'admin',
-        username: 'admin',
-        email: 'admin@example.com',
-        role: 'admin',
-        password: bycrypt.hashSync('admin', 10),
+        nama_lengkap: "admin",
+        username: "admin",
+        email: "admin@example.com",
+        role: "admin",
+        password: bycrypt.hashSync("admin", 10),
         createdAt: new Date(),
         updatedAt: new Date(),
       },

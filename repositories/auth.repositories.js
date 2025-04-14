@@ -1,4 +1,4 @@
-const { user } = require('../models');
+const { user } = require("../models");
 
 exports.getUserByEmail = async (email) => {
   // get from db
@@ -10,7 +10,7 @@ exports.getUserByEmail = async (email) => {
     return data[0];
   }
 
-  throw new Error('Akun tidak ditemukan');
+  throw new Error("Akun tidak ditemukan");
 };
 
 exports.getUserById = async (id) => {
@@ -20,5 +20,5 @@ exports.getUserById = async (id) => {
     return data[0];
   }
 
-  throw new Error('Akun tidak ditemukan');
+  throw new Error("Akun tidak ditemukan");
 };

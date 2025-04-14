@@ -1,14 +1,14 @@
-const weightUseCase = require('../usecases/weight.usecases');
-const yup = require('yup');
+const weightUseCase = require("../usecases/weight.usecases");
+const yup = require("yup");
 
 const schema = yup.object().shape({
-  name: yup.string().required('Nama bobot wajib diisi'),
-  IPK_weight: yup.number().required('Bobot IPK wajib diisi'),
-  intern_category_weight: yup.number('Bobot tipe magang wajib diisi'),
-  college_major_weight: yup.number('Bobot jurusan wajib diisi'),
-  CV_score_weight: yup.number('Bobot skor CV wajib diisi'),
+  name: yup.string().required("Nama bobot wajib diisi"),
+  IPK_weight: yup.number().required("Bobot IPK wajib diisi"),
+  intern_category_weight: yup.number("Bobot tipe magang wajib diisi"),
+  college_major_weight: yup.number("Bobot jurusan wajib diisi"),
+  CV_score_weight: yup.number("Bobot skor CV wajib diisi"),
   motivation_letter_score_weight: yup.number(
-    'Bobot skor motivation letter Magang wajib diisi'
+    "Bobot skor motivation letter Magang wajib diisi"
   ),
 });
 
@@ -25,7 +25,7 @@ exports.getWeights = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Data bobot ditemukan',
+      message: "Data bobot ditemukan",
       data: weight.data,
       pagination: weight.pagination,
     });
@@ -43,14 +43,14 @@ exports.getWeight = async (req, res, next) => {
     if (!data) {
       res.status(404).json({
         success: false,
-        message: 'Data bobot tidak ditemukan',
+        message: "Data bobot tidak ditemukan",
         data,
       });
     }
 
     res.status(200).json({
       success: true,
-      message: 'Data bobot ditemukan',
+      message: "Data bobot ditemukan",
       data,
     });
   } catch (error) {
@@ -65,7 +65,7 @@ exports.createWeight = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: 'Data bobot berhasil dibuat',
+      message: "Data bobot berhasil dibuat",
       data,
     });
   } catch (error) {
@@ -89,7 +89,7 @@ exports.updateWeight = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Data bobot berhasil diperbarui',
+      message: "Data bobot berhasil diperbarui",
       data,
     });
   } catch (error) {
@@ -110,7 +110,7 @@ exports.deleteWeight = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: 'Data bobot berhasil dihapus',
+      message: "Data bobot berhasil dihapus",
       data,
     });
   } catch (error) {

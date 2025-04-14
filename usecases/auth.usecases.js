@@ -1,9 +1,9 @@
-const jsonwebtoken = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const jsonwebtoken = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const {
   getUserByEmail,
   getUserById,
-} = require('../repositories/auth.repositories');
+} = require("../repositories/auth.repositories");
 
 exports.login = async (email, password) => {
   let user = await getUserByEmail(email);
@@ -23,7 +23,7 @@ exports.login = async (email, password) => {
   };
 
   const token = jsonwebtoken.sign(jwtPayload, process.env.JWT_SECRET, {
-    expiresIn: '20h',
+    expiresIn: "20h",
   });
 
   const data = {
@@ -37,7 +37,7 @@ exports.login = async (email, password) => {
 exports.getUserProfile = async (id) => {
   let data = await getUserById(id);
   if (!data) {
-    throw new Error('Akun tidak ditemukan');
+    throw new Error("Akun tidak ditemukan");
   } else if (data?.dataValues?.password) {
     delete data?.dataValues?.password;
   } else {

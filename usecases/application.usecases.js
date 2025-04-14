@@ -1,13 +1,13 @@
-const applicationRepo = require('../repositories/application.repositories');
+const applicationRepo = require("../repositories/application.repositories");
 
 exports.getApplications = async ({
   month,
   year,
   page = 1,
   limit = 10,
-  sort = 'asc',
-  sortBy = 'full_name',
-  search = '',
+  sort = "asc",
+  sortBy = "full_name",
+  search = "",
 }) => {
   const { data, totalItems, totalPages } =
     await applicationRepo.getApplications({
@@ -61,10 +61,10 @@ exports.createApplication = async (payload) => {
   );
 
   if (check_unique_email) {
-    throw { statusCode: 409, message: 'Email ini sudah melakukan pendaftaran' };
+    throw { statusCode: 409, message: "Email ini sudah melakukan pendaftaran" };
   }
   if (check_unique_phone) {
-    throw { statusCode: 409, message: 'No HP ini sudah melakukan pendaftaran' };
+    throw { statusCode: 409, message: "No HP ini sudah melakukan pendaftaran" };
   }
 
   const data = await applicationRepo.createApplication(payload);
@@ -83,13 +83,13 @@ exports.updateApplication = async (id, payload) => {
   if (check_unique_email) {
     throw {
       statusCode: 409,
-      message: 'Email ini sudah melakukan pendaftaran',
+      message: "Email ini sudah melakukan pendaftaran",
     };
   }
   if (check_unique_phone) {
     throw {
       statusCode: 409,
-      message: 'No HP ini sudah melakukan pendaftaran',
+      message: "No HP ini sudah melakukan pendaftaran",
     };
   }
 
@@ -101,7 +101,7 @@ exports.updateApplication = async (id, payload) => {
 exports.deleteApplication = async (id) => {
   const check_application_id = await applicationRepo.getApplicationById(id);
   if (!check_application_id) {
-    throw { statusCode: 404, message: 'Data pendaftar tidak ditemukan' };
+    throw { statusCode: 404, message: "Data pendaftar tidak ditemukan" };
   } else {
     const data = await applicationRepo.deleteApplication(id);
     return data;

@@ -1,5 +1,5 @@
-const { SAW_Result } = require('../models');
-const { Op } = require('sequelize');
+const { SAW_Result } = require("../models");
+const { Op } = require("sequelize");
 exports.getSAW_Results = async ({
   month,
   year,
@@ -27,18 +27,18 @@ exports.getSAW_Results = async ({
   const data = await SAW_Result.findAll({
     where: filter,
     attributes: [
-      'id',
-      'full_name',
-      'accepted_division',
-      'college_major',
-      'start_month',
-      'IPK',
-      'intern_category',
-      'CV_score',
-      'motivation_letter_score',
-      'total_score',
+      "id",
+      "full_name",
+      "accepted_division",
+      "college_major",
+      "start_month",
+      "IPK",
+      "intern_category",
+      "CV_score",
+      "motivation_letter_score",
+      "total_score",
     ],
-    order: [[sortBy || 'full_name', sort || 'asc']],
+    order: [[sortBy || "full_name", sort || "asc"]],
     offset: (page - 1) * limit,
     limit: limit,
   });

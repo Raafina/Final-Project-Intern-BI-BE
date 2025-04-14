@@ -1,6 +1,6 @@
-const { application } = require('../models');
-const { Op, where } = require('sequelize');
-const { v4: uuidv4 } = require('uuid');
+const { application } = require("../models");
+const { Op, where } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
 
 exports.getApplications = async ({
   month,
@@ -29,18 +29,18 @@ exports.getApplications = async ({
   const data = await application.findAll({
     where: filter,
     attributes: [
-      'id',
-      'full_name',
-      'division_request',
-      'start_month',
-      'IPK',
-      'intern_category',
-      'college_major',
-      'google_drive_link',
-      'motivation_letter_score',
-      'CV_score',
+      "id",
+      "full_name",
+      "division_request",
+      "start_month",
+      "IPK",
+      "intern_category",
+      "college_major",
+      "google_drive_link",
+      "motivation_letter_score",
+      "CV_score",
     ],
-    order: [[sortBy || 'full_name', sort || 'asc']],
+    order: [[sortBy || "full_name", sort || "asc"]],
     offset: (page - 1) * limit,
     limit: limit,
   });
@@ -76,7 +76,7 @@ exports.getApplicationEmail = async (email, excludeId = null) => {
 
   return application.findOne({
     where: whereClause,
-    attributes: ['id'],
+    attributes: ["id"],
   });
 };
 
@@ -91,7 +91,7 @@ exports.getApplicationPhone = async (phone, excludeId = null) => {
 
   return application.findOne({
     where: whereClause,
-    attributes: ['id'],
+    attributes: ["id"],
   });
 };
 
@@ -100,9 +100,9 @@ exports.getApplicationByStartDate = async (start_month) => {
   const year = date.getFullYear();
   const month = date.getMonth();
 
-  const startOfMonth = new Date(year, month, 1).toISOString().split('T')[0];
+  const startOfMonth = new Date(year, month, 1).toISOString().split("T")[0];
 
-  const endOfMonth = new Date(year, month + 1, 0).toISOString().split('T')[0];
+  const endOfMonth = new Date(year, month + 1, 0).toISOString().split("T")[0];
 
   const data = await application.findAll({
     where: {

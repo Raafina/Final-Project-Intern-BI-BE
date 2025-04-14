@@ -1,6 +1,6 @@
-'use strict';
-const { col } = require('sequelize');
-const { v4: uuidv4 } = require('uuid');
+"use strict";
+const { col } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -17,10 +17,10 @@ module.exports = {
       updatedAt: new Date(),
     }));
 
-    await queryInterface.bulkInsert('weights', weightData);
+    await queryInterface.bulkInsert("weights", weightData);
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('weights', null, {});
+    await queryInterface.bulkDelete("weights", null, {});
   },
 };

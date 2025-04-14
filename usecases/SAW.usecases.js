@@ -1,62 +1,62 @@
-const applicationRepo = require('../repositories/application.repositories');
-const weightRepo = require('../repositories/weight.repositories');
-const SAWRepo = require('../repositories/SAW.repositories');
-const { v4: uuidv4 } = require('uuid');
-const { col } = require('sequelize');
+const applicationRepo = require("../repositories/application.repositories");
+const weightRepo = require("../repositories/weight.repositories");
+const SAWRepo = require("../repositories/SAW.repositories");
+const { v4: uuidv4 } = require("uuid");
+const { col } = require("sequelize");
 
 const intern_category_mapping = {
-  magang_mandiri: 0.8,
-  magang_KRS: 1.0,
+  "Magang Mandiri": 0.8,
+  "Magang KRS": 1.0,
 };
 
 const college_major_mapping = {
-  moneter: {
-    akuntansi: 1.0,
-    manajemen: 0.9,
-    it: 0.8,
-    hukum: 0.7,
-    statistika: 1.0,
-    ilmu_sosial: 0.6,
+  "Moneter": {
+    "Akuntansi": 1.0,
+    "Manajemen": 0.9,
+    "IT": 0.8,
+    "Hukum": 0.7,
+    "Statistika": 1.0,
+    "Ilmu Sosial": 0.6,
   },
-  makroprudensial: {
-    akuntansi: 0.9,
-    manajemen: 1.0,
-    it: 0.7,
-    hukum: 0.8,
-    statistika: 1.0,
-    ilmu_sosial: 0.6,
+  "Makroprudensial": {
+    "Akuntansi": 0.9,
+    "Manajemen": 1.0,
+    "IT": 0.7,
+    "Hukum": 0.8,
+    "Statistika": 1.0,
+    "Ilmu Sosial": 0.6,
   },
-  sistem_pembayaran: {
-    akuntansi: 0.7,
-    manajemen: 0.8,
-    it: 1.0,
-    hukum: 0.6,
-    statistika: 0.9,
-    ilmu_sosial: 0.5,
+  "Sistem Pembayaran": {
+    "Akuntansi": 0.7,
+    "Manajemen": 0.8,
+    "IT": 1.0,
+    "Hukum": 0.6,
+    "Statistika": 0.9,
+    "Ilmu Sosial": 0.5,
   },
-  pengelolaan_uang_rupiah: {
-    akuntansi: 0.8,
-    manajemen: 0.7,
-    it: 0.6,
-    hukum: 0.9,
-    statistika: 1.0,
-    ilmu_sosial: 0.5,
+  "Pengelolaan Uang Rupiah": {
+    "Akuntansi": 0.8,
+    "Manajemen": 0.7,
+    "IT": 0.6,
+    "Hukum": 0.9,
+    "Statistika": 1.0,
+    "Ilmu Sosial": 0.5,
   },
-  humas: {
-    akuntansi: 0.6,
-    manajemen: 0.7,
-    it: 0.5,
-    hukum: 0.8,
-    statistika: 0.6,
-    ilmu_sosial: 1.0,
+  "Humas": {
+    "Akuntansi": 0.6,
+    "Manajemen": 0.7,
+    "IT": 0.5,
+    "Hukum": 0.8,
+    "Statistika": 0.6,
+    "Ilmu Sosial": 1.0,
   },
-  internal: {
-    akuntansi: 0.4,
-    manajemen: 0.9,
-    it: 0.7,
-    hukum: 1.0,
-    statistika: 0.6,
-    ilmu_sosial: 1.0,
+  "Internal": {
+    "Akuntansi": 0.4,
+    "Manajemen": 0.9,
+    "IT": 0.7,
+    "Hukum": 1.0,
+    "Statistika": 0.6,
+    "Ilmu Sosial": 1.0,
   },
 };
 
@@ -68,14 +68,13 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
     applicationRepo.getApplicationByStartDate(start_month),
     weightRepo.getWeightById(weight_id),
   ]);
-  console.log(dataApplicationRaw, 'cek');
 
-  if (!dataWeightInstance || dataWeightInstance === 'Data tidak ditemukan') {
-    throw new Error('Data bobot tidak ditemukan');
+  if (!dataWeightInstance || dataWeightInstance === "Data tidak ditemukan") {
+    throw new Error("Data bobot tidak ditemukan");
   }
 
-  if (!dataApplicationRaw || dataApplicationRaw === 'Data tidak ditemukan') {
-    throw new Error('Data pendaftar tidak ditemukan');
+  if (!dataApplicationRaw || dataApplicationRaw === "Data tidak ditemukan") {
+    throw new Error("Data pendaftar tidak ditemukan");
   }
 
   const dataApplication = dataApplicationRaw.map(
@@ -89,6 +88,7 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
   const dataWeight = JSON.parse(JSON.stringify(dataWeightInstance));
 
   const assignedApplicants = new Set();
+
   const selectedCandidates = [];
 
   const division_accepted = {};
@@ -110,9 +110,7 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
         (data) =>
           !applicantsForField.includes(data) &&
           !assignedApplicants.has(data.id) &&
-          college_major_mapping[division]?.[
-            data.college_major?.toLowerCase()
-          ] &&
+          college_major_mapping[division]?.[data.college_major] &&
           data.start_month.startsWith(yearMonth)
       );
 
@@ -122,15 +120,9 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
       ].slice(0, jumlah);
     }
 
-    if (applicantsForField.length === 0) {
-      console.log(`No suitable applicants found for ${division}`);
-      continue;
-    }
-
     const normalizedData = applicantsForField.map((d) => {
       const college_major_score =
-        college_major_mapping[division]?.[d.college_major?.toLowerCase()] ||
-        0.2;
+        college_major_mapping[division]?.[d.college_major] || 0.2;
 
       return {
         ...d,
@@ -189,7 +181,6 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
     motivation_letter_score: selected.motivation_letter_score,
     total_score: selected.total_score,
   }));
-  console.log(formattedResults);
 
   if (formattedResults.length > 0) {
     await SAWRepo.saveSAW_Result(formattedResults);
@@ -198,7 +189,7 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
   if (formattedResults.length === 0) {
     return null;
   }
-
+  console.log(formattedResults);
   return formattedResults;
 };
 
@@ -207,9 +198,9 @@ exports.getSAW_Results = async ({
   year,
   page = 1,
   limit = 10,
-  sort = 'asc',
-  sortBy = 'full_name',
-  search = '',
+  sort = "asc",
+  sortBy = "full_name",
+  search = "",
 }) => {
   const { data, totalItems, totalPages } = await SAWRepo.getSAW_Results({
     month,
