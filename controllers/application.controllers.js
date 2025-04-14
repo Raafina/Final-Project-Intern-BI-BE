@@ -30,7 +30,15 @@ const applicationCreateUpdateSchema = yup.object().shape({
   college_major: yup
     .string()
     .oneOf(
-      ["akuntansi", "manajemen", "IT", "hukum", "statistika", "ilmu_sosial"],
+      [
+        "Ekonomi",
+        "Akuntansi",
+        "Manajemen",
+        "IT",
+        "Hukum",
+        "Statistika",
+        "Ilmu Sosial",
+      ],
       "Jurusan tidak valid"
     )
     .required("Jurusan wajib diisi"),
@@ -55,8 +63,16 @@ const applicationCreateUpdateSchema = yup.object().shape({
     .string()
     .url("Harus berupa link valid")
     .required("Link Google Drive wajib diisi"),
-  CV_score: yup.number().min(0).max(100).nullable(),
-  motivation_letter_score: yup.number().min(0).max(100).nullable(),
+  CV_score: yup
+    .number()
+    .min(0, "Nilai motivation letter tidak boleh kurang dari 0")
+    .max(100, "Nilai motivation letter tidak boleh lebih dari 100")
+    .nullable(),
+  motivation_letter_score: yup
+    .number()
+    .min(0, "Nilai motivation letter tidak boleh kurang dari 0")
+    .max(100, "Nilai motivation letter tidak boleh lebih dari 100")
+    .nullable(),
 });
 
 exports.getApplications = async (req, res, next) => {
