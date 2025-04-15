@@ -1,18 +1,70 @@
 const weightUseCase = require("../usecases/weight.usecases");
 const yup = require("yup");
 
-const schema = yup.object().shape({
-  name: yup.string().required("Nama bobot wajib diisi"),
-  IPK_weight: yup.number().required("Bobot IPK wajib diisi"),
-  intern_category_weight: yup
-    .number()
-    .required("Bobot tipe magang wajib diisi"),
-  college_major_weight: yup.number().required("Bobot jurusan wajib diisi"),
-  CV_score_weight: yup.number().required("Bobot skor CV wajib diisi"),
-  motivation_letter_score_weight: yup
-    .number()
-    .required("Bobot skor motivation letter wajib diisi"),
-});
+const weightCreateUpdateSchema = yup
+  .object()
+  .shape({
+    name: yup.string().required("Nama bobot wajib diisi"),
+    IPK_weight: yup
+      .number()
+      .required("Bobot IPK wajib diisi")
+      .min(0, "Bobot IPK tidak boleh kurang dari 0")
+      .max(1, "Bobot IPK tidak boleh lebih dari 1"),
+    intern_category_weight: yup
+      .number()
+      .required("Bobot tipe magang wajib diisi")
+      .min(0, "Bobot tipe magang tidak boleh kurang dari 0")
+      .max(1, "Bobot tipe magang tidak boleh lebih dari 1"),
+    college_major_weight: yup
+      .number()
+      .required("Bobot jurusan wajib diisi")
+      .min(0, "Bobot jurusan tidak boleh kurang dari 0")
+      .max(1, "Bobot jurusan tidak boleh lebih dari 1"),
+    CV_score_weight: yup
+      .number()
+      .required("Bobot skor CV wajib diisi")
+      .min(0, "Bobot skor CV tidak boleh kurang dari 0")
+      .max(1, "Bobot skor CV tidak boleh lebih dari 1"),
+    motivation_letter_score_weight: yup
+      .number()
+      .required("Bobot skor motivation letter wajib diisi")
+      .min(0, "Bobot motivation letter tidak boleh kurang dari 0")
+      .max(1, "Bobot motivation letter tidak boleh lebih dari 1"),
+  })
+  .test(
+    "total-weight",
+    "Total bobot tidak boleh lebih dari 1",
+    function (values) {
+      const {
+        IPK_weight = 0,
+        intern_category_weight = 0,
+        college_major_weight = 0,
+        CV_score_weight = 0,
+        motivation_letter_score_weight = 0,
+      } = values;
+
+      const total =
+        IPK_weight +
+        intern_category_weight +
+        college_major_weight +
+        CV_score_weight +
+        motivation_letter_score_weight;
+      if (total < 1) {
+        return this.createError({
+          path: "totalWeight",
+          message: "Total bobot tidak boleh kurang dari 1",
+        });
+      }
+      if (total > 1) {
+        return this.createError({
+          path: "totalWeight",
+          message: "Total bobot tidak boleh lebih dari 1",
+        });
+      }
+
+      return true;
+    }
+  );
 
 exports.getWeights = async (req, res, next) => {
   const { page, limit, sort, sortBy, search } = req.query;
@@ -61,7 +113,7 @@ exports.getWeight = async (req, res, next) => {
 };
 exports.createWeight = async (req, res, next) => {
   try {
-    await schema.validate(req.body, { abortEarly: false });
+    await weightCreateUpdateSchema.validate(req.body, { abortEarly: false });
 
     const data = await weightUseCase.createWeight(req.body);
 
@@ -84,7 +136,7 @@ exports.createWeight = async (req, res, next) => {
 
 exports.updateWeight = async (req, res, next) => {
   try {
-    await schema.validate(req.body, { abortEarly: false });
+    await weightCreateUpdateSchema.validate(req.body, { abortEarly: false });
 
     const { id } = req.params;
     const data = await weightUseCase.updateWeight(id, req.body);
