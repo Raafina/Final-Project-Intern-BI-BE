@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require("uuid");
 exports.getWeights = async ({ page, limit, sort, sortBy, search }) => {
   const filter = {};
   if (search) {
-    filter.nama = { [Op.iLike]: `%${search}%` };
+    filter.name = { [Op.iLike]: `%${search}%` };
   }
   const totalItems = await weight.count({ where: filter });
 

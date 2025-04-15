@@ -4,12 +4,14 @@ const yup = require("yup");
 const schema = yup.object().shape({
   name: yup.string().required("Nama bobot wajib diisi"),
   IPK_weight: yup.number().required("Bobot IPK wajib diisi"),
-  intern_category_weight: yup.number("Bobot tipe magang wajib diisi"),
-  college_major_weight: yup.number("Bobot jurusan wajib diisi"),
-  CV_score_weight: yup.number("Bobot skor CV wajib diisi"),
-  motivation_letter_score_weight: yup.number(
-    "Bobot skor motivation letter Magang wajib diisi"
-  ),
+  intern_category_weight: yup
+    .number()
+    .required("Bobot tipe magang wajib diisi"),
+  college_major_weight: yup.number().required("Bobot jurusan wajib diisi"),
+  CV_score_weight: yup.number().required("Bobot skor CV wajib diisi"),
+  motivation_letter_score_weight: yup
+    .number()
+    .required("Bobot skor motivation letter wajib diisi"),
 });
 
 exports.getWeights = async (req, res, next) => {
