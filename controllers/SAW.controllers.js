@@ -1,17 +1,18 @@
-const SAWUseCase = require('../usecases/SAW.usecases');
+const SAWUseCase = require("../usecases/SAW.usecases");
 
 exports.calculate = async (req, res, next) => {
   try {
-    const { rencana_mulai, weight_id, kebutuhan_bidang_kerja } = req.body;
+    const { year, month, weight_id, division_quota } = req.body;
     const results = await SAWUseCase.calculate(
-      rencana_mulai,
+      year,
+      month,
       weight_id,
-      kebutuhan_bidang_kerja
+      division_quota
     );
 
     res
       .status(200)
-      .json({ message: 'Data berhasil dieksekusi dengan SAW!', data: results });
+      .json({ message: "Data berhasil dieksekusi dengan SAW!", data: results });
   } catch (error) {
     next(error);
   }
@@ -33,14 +34,14 @@ exports.getSAW_Results = async (req, res, next) => {
     if (!data.data.length) {
       res.status(404).json({
         success: false,
-        message: 'Data hasil seleksi tidak ditemukan',
+        message: "Data hasil seleksi tidak ditemukan",
         data: data.data,
       });
     }
 
     res.status(200).json({
       success: true,
-      message: 'Data pendaftar ditemukan',
+      message: "Data pendaftar ditemukan",
       data: data.data,
       pagination: data.pagination,
     });

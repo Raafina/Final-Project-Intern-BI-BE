@@ -2,7 +2,6 @@ const applicationRepo = require("../repositories/application.repositories");
 const weightRepo = require("../repositories/weight.repositories");
 const SAWRepo = require("../repositories/SAW.repositories");
 const { v4: uuidv4 } = require("uuid");
-const { col } = require("sequelize");
 
 const intern_category_mapping = {
   "Magang Mandiri": 0.8,
@@ -63,9 +62,10 @@ const college_major_mapping = {
 // Normalize IPK to a scale of 0 to 1
 const normalizeIPK = (ipk) => ipk / 4.0;
 
-exports.calculate = async (start_month, weight_id, division_quota) => {
+exports.calculate = async (year, month, weight_id, division_quota) => {
+  const startMonthString = `${year}-${String(month).padStart(2, "0")}`;
   const [dataApplicationRaw, dataWeightInstance] = await Promise.all([
-    applicationRepo.getApplicationByStartDate(start_month),
+    applicationRepo.getApplicationByStartDate(startMonthString),
     weightRepo.getWeightById(weight_id),
   ]);
 
@@ -86,39 +86,32 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
   }
 
   const dataWeight = JSON.parse(JSON.stringify(dataWeightInstance));
-
   const assignedApplicants = new Set();
-
   const selectedCandidates = [];
-
   const division_accepted = {};
 
   for (const [division, jumlah] of Object.entries(division_quota)) {
     if (jumlah <= 0 || !college_major_mapping[division]) continue;
 
-    const yearMonth = start_month.substring(0, 7); // YYYY-MM format
-
-    let applicantsForField = dataApplication.filter(
+    const applicantsMatched = dataApplication.filter(
       (item) =>
-        item.division_kerja === division &&
+        item.division_request === division &&
         !assignedApplicants.has(item.id) &&
-        item.start_month.startsWith(yearMonth)
+        item.start_month.startsWith(startMonthString)
     );
 
-    if (applicantsForField.length < jumlah) {
-      const additionalApplicants = dataApplication.filter(
-        (data) =>
-          !applicantsForField.includes(data) &&
-          !assignedApplicants.has(data.id) &&
-          college_major_mapping[division]?.[data.college_major] &&
-          data.start_month.startsWith(yearMonth)
-      );
+    const applicantsUnmatched = dataApplication.filter(
+      (item) =>
+        item.division_request !== division &&
+        !assignedApplicants.has(item.id) &&
+        college_major_mapping[division]?.[item.college_major] &&
+        item.start_month.startsWith(startMonthString)
+    );
 
-      applicantsForField = [
-        ...applicantsForField,
-        ...additionalApplicants,
-      ].slice(0, jumlah);
-    }
+    let applicantsForField = [
+      ...applicantsMatched,
+      ...applicantsUnmatched,
+    ].slice(0, jumlah);
 
     const normalizedData = applicantsForField.map((d) => {
       const college_major_score =
@@ -155,7 +148,6 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
 
     selected.forEach((s) => {
       assignedApplicants.add(s.id);
-
       division_accepted[s.id] = {
         division_category: division,
       };
@@ -181,18 +173,15 @@ exports.calculate = async (start_month, weight_id, division_quota) => {
     motivation_letter_score: selected.motivation_letter_score,
     total_score: selected.total_score,
   }));
-
+  console.log(
+    `Division: ${division}, Matched: ${applicantsMatched.length}, Unmatched: ${applicantsUnmatched.length}`
+  );
   if (formattedResults.length > 0) {
     await SAWRepo.saveSAW_Result(formattedResults);
   }
 
-  if (formattedResults.length === 0) {
-    return null;
-  }
-  console.log(formattedResults);
-  return formattedResults;
+  return formattedResults.length > 0 ? formattedResults : null;
 };
-
 exports.getSAW_Results = async ({
   month,
   year,

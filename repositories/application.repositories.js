@@ -1,6 +1,8 @@
 const { application } = require("../models");
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
+const { renderMailHtml, sendMail } = require("../utils/mail/mail");
+const { render } = require("ejs");
 
 exports.getApplications = async ({
   month,
@@ -123,6 +125,31 @@ exports.createApplication = async (payload) => {
   payload.id = uuidv4();
   const data = await application.create(payload);
 
+  const contentMail = await renderMailHtml("registration-success.ejs", {
+    full_name: data.full_name,
+    email: data.email,
+    phone: data.phone,
+    university: data.university,
+    semester: data.semester,
+    IPK: data.IPK,
+    intern_category: data.intern_category,
+    division_request: data.division_request,
+    college_major: data.college_major,
+    google_drive_link: data.google_drive_link,
+    start_month: data.start_month,
+    end_month: data.end_month,
+    // created_at: data.createdAt,
+  });
+
+  await sendMail({
+    from: process.env.EMAIL_SMTP_USER,
+    to: data.email,
+    subject:
+      "Pendaftaran Program Magang di KPw Bank Indonesia Provinsi Jawa Tengah",
+    html: contentMail,
+  });
+
+  console.log("email delivered✉️");
   return data;
 };
 

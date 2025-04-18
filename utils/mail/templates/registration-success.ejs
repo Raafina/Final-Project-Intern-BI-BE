@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TEMATIX - Activation User</title>
+  </head>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2px auto;
+      background-color: #ffff;
+      border: 1px solid #dddddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .header {
+      background-color: #555555;
+      padding: 20px;
+      text-align: center;
+    }
+    .content {
+      padding: 20px;
+    }
+
+    .footer {
+      background-color: #f1f1f1;
+      color: #555555;
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 20px 0px;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+      }
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="header">
+        <img src="./bank-indonesia-with-text.svg" style="height: 100px" />
+      </div>
+      <div class="content">
+        <p>Halo <%= full_name %> 👋</p>
+        <p>
+          Kami ucapkan terima kasih atas pendaftaran Program Magang di Kantor
+          Perwakilan Bank Indonesia Provinsi Jawa Tengah .Berikut adalah
+          informasi pendaftaran Anda:
+        </p>
+        <table cellpadding="5" cellspacing="0" style="width: 80%">
+          <tr>
+            <td><strong>Nama Lengkap</strong></td>
+            <td>: <%= full_name %></td>
+          </tr>
+          <tr>
+            <td><strong>Email</strong></td>
+            <td>: <%= email %></td>
+          </tr>
+          <tr>
+            <td><strong>No Telp</strong></td>
+            <td>: <%= phone %></td>
+          </tr>
+          <tr>
+            <td><strong>Universitas</strong></td>
+            <td>: <%= university %></td>
+          </tr>
+          <tr>
+            <td><strong>Semester</strong></td>
+            <td>: <%= semester %></td>
+          </tr>
+          <tr>
+            <td><strong>IPK</strong></td>
+            <td>: <%= IPK %></td>
+          </tr>
+          <tr>
+            <td><strong>Kategori Magang</strong></td>
+            <td>: <%= intern_category %></td>
+          </tr>
+          <tr>
+            <td><strong>Jurusan</strong></td>
+            <td>: <%= college_major %></td>
+          </tr>
+          <tr>
+            <td><strong>Bidang Kerja</strong></td>
+            <td>: <%= division_request %></td>
+          </tr>
+          <tr>
+            <td><strong>Link Berkas</strong></td>
+            <td>: <%= google_drive_link %></td>
+          </tr>
+          <tr>
+            <td><strong>Bulan Mulai</strong></td>
+            <td>: <%= start_month %></td>
+          </tr>
+          <tr>
+            <td><strong>Bulan Selesai</strong></td>
+            <td>: <%= end_month %></td>
+          </tr>
+          <tr>
+            <td><strong>Tanggal Pendaftaran</strong></td>
+          </tr>
+        </table>
+
+        <p>
+          Jika Anda memiliki pertanyaan, jangan ragu untuk menghubungi kami.
+        </p>
+
+        <p style="padding-top: 20px">Hormat Kami</p>
+        <p style="padding-top: 60px">
+          Humas Kantor Perwakilan Bank Indonesia Provinsi Jawa Tengah
+        </p>
+      </div>
+      <div class="footer">
+        <p>
+          &copy; 2025 Kantor Perwakilan Bank Indonesia Provinsi Jawa Tengah.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
