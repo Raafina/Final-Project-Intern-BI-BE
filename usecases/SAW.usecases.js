@@ -173,9 +173,7 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
     motivation_letter_score: selected.motivation_letter_score,
     total_score: selected.total_score,
   }));
-  console.log(
-    `Division: ${division}, Matched: ${applicantsMatched.length}, Unmatched: ${applicantsUnmatched.length}`
-  );
+
   if (formattedResults.length > 0) {
     await SAWRepo.saveSAW_Result(formattedResults);
   }

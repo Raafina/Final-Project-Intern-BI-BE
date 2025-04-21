@@ -123,31 +123,42 @@ exports.getApplicationByStartDate = async (start_month) => {
 
 exports.createApplication = async (payload) => {
   payload.id = uuidv4();
-  const data = await application.create(payload);
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { day: "numeric", month: "long", year: "numeric" };
+    return date.toLocaleDateString("id-ID", options);
+  }
 
   const contentMail = await renderMailHtml("registration-success.ejs", {
-    full_name: data.full_name,
-    email: data.email,
-    phone: data.phone,
-    university: data.university,
-    semester: data.semester,
-    IPK: data.IPK,
-    intern_category: data.intern_category,
-    division_request: data.division_request,
-    college_major: data.college_major,
-    google_drive_link: data.google_drive_link,
-    start_month: data.start_month,
-    end_month: data.end_month,
-    // created_at: data.createdAt,
+    full_name: payload.full_name,
+    email: payload.email,
+    phone: payload.phone,
+    university: payload.university,
+    semester: payload.semester,
+    IPK: payload.IPK,
+    intern_category: payload.intern_category,
+    division_request: payload.division_request,
+    college_major: payload.college_major,
+    google_drive_link: payload.google_drive_link,
+    start_month: formatDate(payload.start_month),
+    end_month: formatDate(payload.end_month),
+    createdAt: formatDate(new Date()),
   });
 
   await sendMail({
     from: process.env.EMAIL_SMTP_USER,
-    to: data.email,
+    to: payload.email,
     subject:
       "Pendaftaran Program Magang di KPw Bank Indonesia Provinsi Jawa Tengah",
     html: contentMail,
   });
+
+  if (!contentMail) {
+    return null;
+  }
+
+  const data = await application.create(payload);
 
   console.log("email delivered✉️");
   return data;
