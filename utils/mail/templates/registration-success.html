@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrasi Berhasil!</title>
+  </head>
+  <body
+    style="
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px 0;
+      background-color: #f1f1f1;
+    "
+  >
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      style="background-color: #f1f1f1"
+    >
+      <tr>
+        <td align="center">
+          <table
+            width="600"
+            cellpadding="0"
+            cellspacing="0"
+            style="
+              background-color: #ffffff;
+              border: 1px solid #dddddd;
+              border-radius: 15px;
+              overflow: hidden;
+            "
+          >
+            <!-- Header -->
+            <tr>
+              <td
+                align="center"
+                style="background-color: #ffffff; padding: 20px"
+              >
+                <img
+                  src="https://res.cloudinary.com/raafi/image/upload/v1745205582/bi-logo-text_junvjr.png"
+                  alt="BI Logo"
+                  width="250"
+                  style="display: block"
+                />
+              </td>
+            </tr>
+            <!-- Content -->
+            <tr>
+              <td style="padding: 20px">
+                <p>Halo <strong><%= full_name %></strong> 👋</p>
+                <p>
+                  Terima kasih telah mendaftar Program Magang di Kantor
+                  Perwakilan Bank Indonesia Provinsi Jawa Tengah. Berikut
+                  informasi pendaftaran Anda:
+                </p>
+
+                <table cellpadding="5" cellspacing="0" width="100%">
+                  <tr>
+                    <td><strong>Nama Lengkap</strong></td>
+                    <td>: <%= full_name %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Email</strong></td>
+                    <td>: <%= email %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>No Telp</strong></td>
+                    <td>: <%= phone %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Universitas</strong></td>
+                    <td>: <%= university %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Semester</strong></td>
+                    <td>: <%= semester %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>IPK</strong></td>
+                    <td>: <%= IPK %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Kategori Magang</strong></td>
+                    <td>: <%= intern_category %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Jurusan</strong></td>
+                    <td>: <%= college_major %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bidang Kerja</strong></td>
+                    <td>: <%= division_request %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Link Berkas</strong></td>
+                    <td>: <%= google_drive_link %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bulan Mulai</strong></td>
+                    <td>: <%= start_month %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Bulan Selesai</strong></td>
+                    <td>: <%= end_month %></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Tanggal Pendaftaran</strong></td>
+                    <td>: <%= createdAt %></td>
+                  </tr>
+                </table>
+
+                <p style="margin-top: 20px">
+                  Jika Anda memiliki pertanyaan, silakan hubungi kami.
+                </p>
+                <p style="margin-top: 40px">Hormat kami,</p>
+                <p style="margin-top: 40px">
+                  Humas Kantor Perwakilan Bank Indonesia Provinsi Jawa Tengah
+                </p>
+              </td>
+            </tr>
+            <!-- Footer -->
+            <tr>
+              <td
+                align="center"
+                style="
+                  background-color: #005596;
+                  color: #ffffff;
+                  padding: 20px;
+                  font-size: 12px;
+                "
+              >
+                &copy;2025 Kantor Perwakilan Bank Indonesia Provinsi Jawa
+                Tengah.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
