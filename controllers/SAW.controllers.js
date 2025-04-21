@@ -49,3 +49,19 @@ exports.getSAW_Results = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.sendMail_Results = async (req, res, next) => {
+  try {
+    await SAWUseCase.sendMail_Results(req.body);
+
+    console.log(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Email berhasil dikirim",
+      data: [],
+    });
+  } catch (error) {
+    next(error);
+  }
+};

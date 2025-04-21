@@ -208,3 +208,9 @@ exports.getSAW_Results = async ({
     },
   };
 };
+
+exports.sendMail_Results = async (payload) => {
+  await SAWRepo.sendMail_Results(payload);
+
+  return true;
+};

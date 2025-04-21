@@ -2,7 +2,6 @@ const { application } = require("../models");
 const { Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 const { renderMailHtml, sendMail } = require("../utils/mail/mail");
-const { render } = require("ejs");
 
 exports.getApplications = async ({
   month,
@@ -160,7 +159,6 @@ exports.createApplication = async (payload) => {
 
   const data = await application.create(payload);
 
-  console.log("email delivered✉️");
   return data;
 };
 
