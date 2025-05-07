@@ -1,7 +1,7 @@
-const { SAW_Result } = require("../models");
+const { DSS_Result } = require("../models");
 const { Op } = require("sequelize");
 const { renderMailHtml, sendMail } = require("../utils/mail/mail");
-exports.getSAW_Results = async ({
+exports.getDSS_Results = async ({
   month,
   year,
   page,
@@ -23,9 +23,9 @@ exports.getSAW_Results = async ({
     filter.full_name = { [Op.iLike]: `%${search}%` };
   }
 
-  const totalItems = await SAW_Result.count({ where: filter });
+  const totalItems = await DSS_Result.count({ where: filter });
 
-  const data = await SAW_Result.findAll({
+  const data = await DSS_Result.findAll({
     where: filter,
     attributes: [
       "id",
@@ -51,8 +51,9 @@ exports.getSAW_Results = async ({
   };
 };
 
-exports.saveSAW_Result = async (payload) => {
-  const data = await SAW_Result.bulkCreate(payload);
+exports.saveDSS_Result = async (payload) => {
+  const data = await DSS_Result.bulkCreate(payload);
+  console.log(data);
   return data;
 };
 
@@ -85,8 +86,8 @@ exports.sendMail_Results = async (payload) => {
   });
 };
 
-exports.updateSAW_Result = async (application_id, payload) => {
-  const data = await SAW_Result.update(payload, {
+exports.updateDSS_Result = async (application_id, payload) => {
+  const data = await DSS_Result.update(payload, {
     where: {
       application_id,
     },
@@ -94,8 +95,8 @@ exports.updateSAW_Result = async (application_id, payload) => {
   return data;
 };
 
-exports.deleteSAW_Result = async (application_id) => {
-  const data = await SAW_Result.destroy({
+exports.deleteDSS_Result = async (application_id) => {
+  const data = await DSS_Result.destroy({
     where: {
       application_id,
     },

@@ -1,27 +1,25 @@
-const SAWUseCase = require("../usecases/SAW.usecases");
+const DSSUseCase = require("../usecases/DSS.usecases");
 
 exports.calculate = async (req, res, next) => {
   try {
     const { year, month, weight_id, division_quota } = req.body;
-    const results = await SAWUseCase.calculate(
+    const results = await DSSUseCase.calculate(
       year,
       month,
       weight_id,
       division_quota
     );
 
-    res
-      .status(200)
-      .json({ message: "Data berhasil dieksekusi dengan SAW!", data: results });
+    res.status(200).json({ message: "Data berhasil dihitung!", data: results });
   } catch (error) {
     next(error);
   }
 };
 
-exports.getSAW_Results = async (req, res, next) => {
+exports.getDSS_Results = async (req, res, next) => {
   try {
     const { month, year, page, limit, sort, sortBy, search } = req.query;
-    const data = await SAWUseCase.getSAW_Results({
+    const data = await DSSUseCase.getDSS_Results({
       month: month ? parseInt(month) : null,
       year: year ? parseInt(year) : null,
       page: parseInt(page) || 1,
@@ -52,7 +50,7 @@ exports.getSAW_Results = async (req, res, next) => {
 
 exports.sendMail_Results = async (req, res, next) => {
   try {
-    await SAWUseCase.sendMail_Results(req.body);
+    await DSSUseCase.sendMail_Results(req.body);
 
     console.log(req.body);
 
