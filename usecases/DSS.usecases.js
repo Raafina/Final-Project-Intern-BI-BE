@@ -1,4 +1,4 @@
-// Adaptasi dari DSS ke MOORA dengan tambahan cost: KRS_remaining
+// Adaptasi dari SAW ke MOORA dengan tambahan cost: KRS_remaining
 const applicationRepo = require("../repositories/application.repositories");
 const weightRepo = require("../repositories/weight.repositories");
 const DSSRepo = require("../repositories/DSS.repositories");
@@ -10,13 +10,60 @@ const intern_category_mapping = {
 };
 
 const college_major_mapping = {
-  /* ... sama seperti sebelumnya ... */
+  "Moneter": {
+    "Akuntansi": 1.0,
+    "Manajemen": 0.9,
+    "IT": 0.8,
+    "Hukum": 0.7,
+    "Statistika": 1.0,
+    "Ilmu Sosial": 0.6,
+  },
+  "Makroprudensial": {
+    "Akuntansi": 0.9,
+    "Manajemen": 1.0,
+    "IT": 0.7,
+    "Hukum": 0.8,
+    "Statistika": 1.0,
+    "Ilmu Sosial": 0.6,
+  },
+  "Sistem Pembayaran": {
+    "Akuntansi": 0.7,
+    "Manajemen": 0.8,
+    "IT": 1.0,
+    "Hukum": 0.6,
+    "Statistika": 0.9,
+    "Ilmu Sosial": 0.5,
+  },
+  "Pengelolaan Uang Rupiah": {
+    "Akuntansi": 0.8,
+    "Manajemen": 0.7,
+    "IT": 0.6,
+    "Hukum": 0.9,
+    "Statistika": 1.0,
+    "Ilmu Sosial": 0.5,
+  },
+  "Humas": {
+    "Akuntansi": 0.6,
+    "Manajemen": 0.7,
+    "IT": 0.5,
+    "Hukum": 0.8,
+    "Statistika": 0.6,
+    "Ilmu Sosial": 1.0,
+  },
+  "Internal": {
+    "Akuntansi": 0.4,
+    "Manajemen": 0.9,
+    "IT": 0.7,
+    "Hukum": 1.0,
+    "Statistika": 0.6,
+    "Ilmu Sosial": 1.0,
+  },
 };
 
 // Normalize IPK to a scale of 0 to 1
 const normalizeIPK = (ipk) => ipk / 4.0;
 
-// Fungsi modular untuk normalisasi vektor
+// Vector Normalization
 const vectorNormalize = (data, keys) => {
   const denom = {};
   keys.forEach((key) => {
@@ -27,7 +74,7 @@ const vectorNormalize = (data, keys) => {
   return data.map((d) => {
     const normalized = {};
     keys.forEach((key) => {
-      normalized[key] = d[key] / (denom[key] || 1); // Hindari divide by zero
+      normalized[key] = d[key] / (denom[key] || 1); // Default to 1 if denom is 0
     });
     return { ...d, ...normalized };
   });
@@ -51,8 +98,6 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
   const dataApplication = dataApplicationRaw.map(
     (app) => app.dataValues || app
   );
-
-  console.log(dataApplication.length, "jumlah pendaftar");
 
   if (dataApplication.length > 0) {
     await DSSRepo.deleteDSS_Result(dataApplication.map((d) => d.id));
@@ -101,7 +146,7 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
         CV_score: (parseFloat(d.CV_score) ?? 0) / 100,
         motivation_letter_score:
           (parseFloat(d.motivation_letter_score) ?? 0) / 100,
-        KRS_remaining: parseFloat(d.KRS_remaining) ?? 0, // Tambahan cost
+        KRS_remaining: parseFloat(d.KRS_remaining) ?? 0,
       };
     });
 
@@ -118,7 +163,7 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
     const normalizedAll = vectorNormalize(normalizedBenefit, cost_keys);
 
     const scored = normalizedAll.map((d) => {
-      // Hitung total score MOORA dengan memisahkan benefit dan cost
+      // calculate total score MOORA using benefit dan cost
       const benefit_score = benefit_keys.reduce(
         (sum, key) => sum + d[key] * dataWeight[`${key}_weight`],
         0
@@ -163,13 +208,9 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
     KRS_remaining_score: selected.KRS_remaining,
     total_score: selected.total_score,
   }));
+
   if (formattedResults.length > 0) {
     await DSSRepo.saveDSS_Result(formattedResults);
-  }
-
-  console.log("[DEBUG] Total hasil akhir:", formattedResults.length);
-  if (formattedResults.length === 0) {
-    console.log("[DEBUG] Tidak ada peserta terpilih");
   }
 
   return formattedResults.length > 0 ? formattedResults : null;
