@@ -1,5 +1,5 @@
-'use strict';
-const { Model } = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class weight extends Model {
     /**
@@ -17,12 +17,13 @@ module.exports = (sequelize, DataTypes) => {
       IPK_weight: DataTypes.FLOAT,
       intern_category_weight: DataTypes.FLOAT,
       college_major_weight: DataTypes.FLOAT,
+      KRS_remaining_weight: DataTypes.FLOAT,
       CV_score_weight: DataTypes.FLOAT,
       motivation_letter_score_weight: DataTypes.FLOAT,
     },
     {
       sequelize,
-      modelName: 'weight',
+      modelName: "weight",
     }
   );
   return weight;

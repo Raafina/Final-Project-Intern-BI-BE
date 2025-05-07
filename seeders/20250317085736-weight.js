@@ -8,10 +8,11 @@ module.exports = {
     const weightData = Array.from({ length: 15 }, (_, i) => ({
       id: uuidv4(),
       name: `Bobot ${i + 1}`,
-      IPK_weight: 0.3,
+      IPK_weight: 0.1,
       college_major_weight: 0.1,
       intern_category_weight: 0.2,
       CV_score_weight: 0.2,
+      KRS_remaining_weight: 0.2,
       motivation_letter_score_weight: 0.2,
       createdAt: new Date(),
       updatedAt: new Date(),

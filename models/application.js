@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      KRS_remaining: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
       IPK: {
         type: DataTypes.FLOAT,
         allowNull: false,

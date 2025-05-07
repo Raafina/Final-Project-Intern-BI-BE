@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('weights', {
+    await queryInterface.createTable("weights", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -26,6 +26,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.FLOAT,
       },
+      KRS_remaining_weight: {
+        allowNull: false,
+        type: Sequelize.FLOAT,
+      },
       CV_score_weight: {
         allowNull: false,
         type: Sequelize.FLOAT,
@@ -45,6 +49,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('weights');
+    await queryInterface.dropTable("weights");
   },
 };

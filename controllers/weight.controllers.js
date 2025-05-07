@@ -20,6 +20,11 @@ const weightCreateUpdateSchema = yup
       .required("Bobot jurusan wajib diisi")
       .min(0, "Bobot jurusan tidak boleh kurang dari 0")
       .max(1, "Bobot jurusan tidak boleh lebih dari 1"),
+    KRS_remaining_weight: yup
+      .number()
+      .required("Bobot sisa KRS wajib diisi")
+      .min(0, "Bobot sisa KRS tidak boleh kurang dari 0")
+      .max(1, "Bobot sisa KRS tidak boleh lebih dari 1"),
     CV_score_weight: yup
       .number()
       .required("Bobot skor CV wajib diisi")
@@ -39,6 +44,7 @@ const weightCreateUpdateSchema = yup
         IPK_weight = 0,
         intern_category_weight = 0,
         college_major_weight = 0,
+        KRS_remaining_weight = 0,
         CV_score_weight = 0,
         motivation_letter_score_weight = 0,
       } = values;
@@ -47,6 +53,7 @@ const weightCreateUpdateSchema = yup
         IPK_weight +
         intern_category_weight +
         college_major_weight +
+        KRS_remaining_weight +
         CV_score_weight +
         motivation_letter_score_weight;
       if (total < 1) {

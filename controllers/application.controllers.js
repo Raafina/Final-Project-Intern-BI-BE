@@ -26,6 +26,7 @@ const applicationCreateUpdateSchema = yup.object().shape({
       "Bidang Peminatan tidak valid"
     )
     .required("Bidang Peminatan wajib diisi"),
+  KRS_remaining: yup.number().required("Sisa KRS wajib diisi"),
   IPK: yup.number().required("IPK wajib diisi"),
   college_major: yup
     .string()

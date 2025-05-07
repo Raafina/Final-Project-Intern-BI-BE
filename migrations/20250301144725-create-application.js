@@ -27,6 +27,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      KRS_remaining: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+      },
       IPK: {
         allowNull: false,
         type: Sequelize.FLOAT,
