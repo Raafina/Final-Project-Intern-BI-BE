@@ -34,6 +34,7 @@ exports.getDSS_Results = async ({
       "college_major",
       "start_month",
       "IPK",
+      "email",
       "intern_category",
       "CV_score",
       "motivation_letter_score",

@@ -6,7 +6,7 @@ router
   .post(authMiddleware("admin"), DSSControllers.calculate)
   .get(authMiddleware("admin"), DSSControllers.getDSS_Results);
 router
-  .route("/send-mail")
+  .route("/send-mail-accepted-intern")
   .post(authMiddleware("admin"), DSSControllers.sendMail_Results);
 
 module.exports = router;

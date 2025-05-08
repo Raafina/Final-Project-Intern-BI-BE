@@ -63,7 +63,7 @@ const applicationCreateUpdateSchema = yup.object().shape({
   google_drive_link: yup
     .string()
     .url("Harus berupa link valid")
-    .required("Link Google Drive wajib diisi"),
+    .required("Link pemberkasan wajib diisi"),
   CV_score: yup
     .number()
     .min(0, "Nilai motivation letter tidak boleh kurang dari 0")

@@ -198,6 +198,7 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
     start_month: selected.start_month,
     accepted_division: division_accepted[selected.id].division_category,
     IPK: selected.original_IPK,
+    email: selected.email,
     intern_category: selected.original_intern_category,
     college_major: selected.original_college_major,
     IPK_score: selected.IPK,
