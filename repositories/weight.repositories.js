@@ -16,6 +16,7 @@ exports.getWeights = async ({ page, limit, sort, sortBy, search }) => {
       "IPK_weight",
       "intern_category_weight",
       "college_major_weight",
+      "KRS_remaining_weight",
       "CV_score_weight",
       "motivation_letter_score_weight",
     ],

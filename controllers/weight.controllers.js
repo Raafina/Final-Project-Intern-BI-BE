@@ -9,36 +9,36 @@ const weightCreateUpdateSchema = yup
       .number()
       .required("Bobot IPK wajib diisi")
       .min(0, "Bobot IPK tidak boleh kurang dari 0")
-      .max(1, "Bobot IPK tidak boleh lebih dari 1"),
+      .max(100, "Bobot IPK tidak boleh lebih dari 100"),
     intern_category_weight: yup
       .number()
       .required("Bobot tipe magang wajib diisi")
       .min(0, "Bobot tipe magang tidak boleh kurang dari 0")
-      .max(1, "Bobot tipe magang tidak boleh lebih dari 1"),
+      .max(100, "Bobot tipe magang tidak boleh lebih dari 100"),
     college_major_weight: yup
       .number()
       .required("Bobot jurusan wajib diisi")
       .min(0, "Bobot jurusan tidak boleh kurang dari 0")
-      .max(1, "Bobot jurusan tidak boleh lebih dari 1"),
+      .max(100, "Bobot jurusan tidak boleh lebih dari 100"),
     KRS_remaining_weight: yup
       .number()
       .required("Bobot sisa KRS wajib diisi")
       .min(0, "Bobot sisa KRS tidak boleh kurang dari 0")
-      .max(1, "Bobot sisa KRS tidak boleh lebih dari 1"),
+      .max(100, "Bobot sisa KRS tidak boleh lebih dari 100"),
     CV_score_weight: yup
       .number()
       .required("Bobot skor CV wajib diisi")
       .min(0, "Bobot skor CV tidak boleh kurang dari 0")
-      .max(1, "Bobot skor CV tidak boleh lebih dari 1"),
+      .max(100, "Bobot skor CV tidak boleh lebih dari 100"),
     motivation_letter_score_weight: yup
       .number()
       .required("Bobot skor motivation letter wajib diisi")
       .min(0, "Bobot motivation letter tidak boleh kurang dari 0")
-      .max(1, "Bobot motivation letter tidak boleh lebih dari 1"),
+      .max(100, "Bobot motivation letter tidak boleh lebih dari 100"),
   })
   .test(
     "total-weight",
-    "Total bobot tidak boleh lebih dari 1",
+    "Total bobot tidak boleh lebih dari 100",
     function (values) {
       const {
         IPK_weight = 0,
@@ -56,16 +56,16 @@ const weightCreateUpdateSchema = yup
         KRS_remaining_weight +
         CV_score_weight +
         motivation_letter_score_weight;
-      if (total < 1) {
+      if (total < 100) {
         return this.createError({
           path: "totalWeight",
-          message: "Total bobot tidak boleh kurang dari 1",
+          message: "Total bobot tidak boleh kurang dari 100",
         });
       }
-      if (total > 1) {
+      if (total > 100) {
         return this.createError({
           path: "totalWeight",
-          message: "Total bobot tidak boleh lebih dari 1",
+          message: "Total bobot tidak boleh lebih dari 100",
         });
       }
 
@@ -118,6 +118,7 @@ exports.getWeight = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.createWeight = async (req, res, next) => {
   try {
     await weightCreateUpdateSchema.validate(req.body, { abortEarly: false });
