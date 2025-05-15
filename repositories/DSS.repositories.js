@@ -87,15 +87,6 @@ exports.sendMail_Results = async (payload) => {
   });
 };
 
-exports.updateDSS_Result = async (application_id, payload) => {
-  const data = await DSS_Result.update(payload, {
-    where: {
-      application_id,
-    },
-  });
-  return data;
-};
-
 exports.deleteDSS_Result = async (application_id) => {
   const data = await DSS_Result.destroy({
     where: {
