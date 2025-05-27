@@ -76,7 +76,6 @@ exports.getDSS_Results = async ({
 
 exports.saveDSS_Result = async (payload) => {
   const data = await DSS_Result.bulkCreate(payload);
-  console.log(data);
   return data;
 };
 
@@ -99,7 +98,6 @@ exports.sendMail_Results = async (payload) => {
     onboarding_date: formatDate(payload.onboarding_date),
     onboarding_time: payload.onboarding_time,
   });
-  console.log(payload, "payload");
   await sendMail({
     from: process.env.EMAIL_SMTP_USER,
     to: payload.email,
