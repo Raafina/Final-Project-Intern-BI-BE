@@ -104,6 +104,23 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
   }
 
   const dataWeight = JSON.parse(JSON.stringify(dataWeightInstance));
+
+  // ✅ NORMALISASI BOBOT: Konversi dari skala 100 ke skala 1
+  const weightKeys = [
+    "IPK_weight",
+    "intern_category_weight",
+    "college_major_weight",
+    "KRS_remaining_weight",
+    "CV_score_weight",
+    "motivation_letter_score_weight",
+  ];
+
+  weightKeys.forEach((key) => {
+    if (typeof dataWeight[key] === "number") {
+      dataWeight[key] = dataWeight[key] / 100;
+    }
+  });
+
   const assignedApplicants = new Set();
   const selectedCandidates = [];
   const division_accepted = {};
@@ -163,7 +180,6 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
     const normalizedAll = vectorNormalize(normalizedBenefit, cost_keys);
 
     const scored = normalizedAll.map((d) => {
-      // calculate total score MOORA using benefit dan cost
       const benefit_score = benefit_keys.reduce(
         (sum, key) => sum + d[key] * dataWeight[`${key}_weight`],
         0
@@ -193,20 +209,7 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
   const formattedResults = selectedCandidates.map((selected) => ({
     id: uuidv4(),
     application_id: selected.id,
-    full_name: selected.full_name,
-    email: selected.email,
-    start_month: selected.start_month,
     accepted_division: division_accepted[selected.id].division_category,
-    IPK: selected.original_IPK,
-    email: selected.email,
-    intern_category: selected.original_intern_category,
-    college_major: selected.original_college_major,
-    IPK_score: selected.IPK,
-    intern_category_score: selected.intern_category,
-    college_major_score: selected.college_major,
-    CV_score: selected.CV_score,
-    motivation_letter_score: selected.motivation_letter_score,
-    KRS_remaining_score: selected.KRS_remaining,
     total_score: selected.total_score,
   }));
 

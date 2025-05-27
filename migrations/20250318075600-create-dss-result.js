@@ -8,57 +8,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID,
       },
-      full_name: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      email: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      IPK: {
-        allowNull: false,
-        type: Sequelize.FLOAT,
-      },
-      intern_category: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      college_major: {
-        allowNull: false,
-        type: Sequelize.STRING,
-      },
-      start_month: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
       accepted_division: {
         allowNull: false,
         type: Sequelize.STRING,
       },
       application_id: {
-        allowNull: false,
         type: Sequelize.UUID,
-      },
-      IPK_score: {
         allowNull: false,
-        type: Sequelize.FLOAT,
-      },
-      intern_category_score: {
-        allowNull: false,
-        type: Sequelize.FLOAT,
-      },
-      college_major_score: {
-        allowNull: false,
-        type: Sequelize.FLOAT,
-      },
-      CV_score: {
-        type: Sequelize.FLOAT,
-        allowNull: true,
-      },
-      motivation_letter_score: {
-        type: Sequelize.FLOAT,
-        allowNull: true,
+        unique: true,
+        references: {
+          model: "applications",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       total_score: {
         type: Sequelize.FLOAT,

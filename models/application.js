@@ -8,7 +8,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      application.hasOne(models.DSS_Result, {
+        foreignKey: "application_id",
+        as: "dss_result",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
   application.init(

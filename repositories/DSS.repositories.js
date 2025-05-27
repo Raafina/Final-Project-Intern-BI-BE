@@ -1,54 +1,62 @@
-const { DSS_Result } = require("../models");
+const { DSS_Result, application } = require("../models");
 const { Op } = require("sequelize");
 const { renderMailHtml, sendMail } = require("../utils/mail/mail");
 exports.getDSS_Results = async ({
   month,
   year,
-  page,
-  limit,
-  sort,
-  sortBy,
-  search,
+  page = 1,
+  limit = 10,
+  sort = "asc",
+  sortBy = "full_name",
+  search = "",
 }) => {
-  const filter = {};
+  const appFilter = {};
 
   if (month && year) {
-    filter.start_month = {
+    appFilter.start_month = {
       [Op.gte]: new Date(year, month - 1, 1),
       [Op.lt]: new Date(year, month, 1),
     };
   }
 
   if (search) {
-    filter.full_name = { [Op.iLike]: `%${search}%` };
+    appFilter.full_name = { [Op.iLike]: `%${search}%` };
   }
 
-  const totalItems = await DSS_Result.count({ where: filter });
-
-  const data = await DSS_Result.findAll({
-    where: filter,
-    attributes: [
-      "id",
-      "full_name",
-      "accepted_division",
-      "college_major",
-      "start_month",
-      "IPK",
-      "email",
-      "intern_category",
-      "CV_score",
-      "motivation_letter_score",
-      "total_score",
+  const { count, rows } = await DSS_Result.findAndCountAll({
+    include: [
+      {
+        model: application,
+        as: "application",
+        where: appFilter,
+        attributes: [
+          "full_name",
+          "college_major",
+          "start_month",
+          "IPK",
+          "email",
+          "intern_category",
+          "CV_score",
+          "motivation_letter_score",
+        ],
+      },
     ],
-    order: [[sortBy || "full_name", sort || "asc"]],
+    order: [[{ model: application, as: "application" }, sortBy, sort]],
     offset: (page - 1) * limit,
     limit: limit,
   });
 
+  const data = rows.map((row) => ({
+    id: row.id,
+    total_score: row.total_score,
+    accepted_division: row.accepted_division,
+    ...row.application.dataValues,
+  }));
+
   return {
     data,
-    totalItems,
-    totalPages: Math.ceil(totalItems / limit),
+    totalItems: count,
+    totalPages: Math.ceil(count / limit),
   };
 };
 

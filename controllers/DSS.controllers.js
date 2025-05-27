@@ -30,7 +30,7 @@ exports.getDSS_Results = async (req, res, next) => {
     });
 
     if (!data.data.length) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: "Data hasil seleksi tidak ditemukan",
         data: data.data,
