@@ -7,20 +7,43 @@ exports.getDSS_Results = async ({
   page = 1,
   limit = 10,
   sort = "asc",
-  sortBy = "full_name",
+  sortBy = "total_score",
   search = "",
 }) => {
   const appFilter = {};
-
   if (month && year) {
     appFilter.start_month = {
       [Op.gte]: new Date(year, month - 1, 1),
       [Op.lt]: new Date(year, month, 1),
     };
   }
-
   if (search) {
     appFilter.full_name = { [Op.iLike]: `%${search}%` };
+  }
+
+  const applicationColumns = [
+    "full_name",
+    "college_major",
+    "start_month",
+    "IPK",
+    "email",
+    "intern_category",
+    "CV_score",
+    "motivation_letter_score",
+  ];
+
+  let order = [];
+
+  if (
+    ["total_score", "accepted_division", "createdAt", "updatedAt"].includes(
+      sortBy
+    )
+  ) {
+    order = [[sortBy, sort.toUpperCase()]];
+  } else if (applicationColumns.includes(sortBy)) {
+    order = [
+      [{ model: application, as: "application" }, sortBy, sort.toUpperCase()],
+    ];
   }
 
   const { count, rows } = await DSS_Result.findAndCountAll({
@@ -29,19 +52,10 @@ exports.getDSS_Results = async ({
         model: application,
         as: "application",
         where: appFilter,
-        attributes: [
-          "full_name",
-          "college_major",
-          "start_month",
-          "IPK",
-          "email",
-          "intern_category",
-          "CV_score",
-          "motivation_letter_score",
-        ],
+        attributes: applicationColumns,
       },
     ],
-    order: [[{ model: application, as: "application" }, sortBy, sort]],
+    order,
     offset: (page - 1) * limit,
     limit: limit,
   });
