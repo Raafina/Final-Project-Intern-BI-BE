@@ -51,7 +51,6 @@ exports.getDSS_Results = async ({
     distinct: true,
   });
 
-  // Transform data
   const data = rows.map((row) => ({
     id: row.id,
     total_score: row.total_score,
