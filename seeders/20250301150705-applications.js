@@ -4,11 +4,9 @@ const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const existingEmails = new Set();
     const existingPhones = new Set();
 
     const generateEmailFromName = (fullName) => {
-      // Mengubah nama lengkap menjadi email dengan format: nama_lengkap@example.com
       const emailPrefix = fullName.toLowerCase().replace(/\s+/g, "_");
       return `${emailPrefix}@example.com`;
     };
@@ -55,7 +53,6 @@ module.exports = {
     };
 
     const data = [
-      // 20 Data Mahasiswa Semarang - Bulan Juli 2025
       {
         id: uuidv4(),
         full_name: "Andi Prasetyo Nugroho",

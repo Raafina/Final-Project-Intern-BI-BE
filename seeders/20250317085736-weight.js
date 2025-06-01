@@ -5,18 +5,32 @@ const { v4: uuidv4 } = require("uuid");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const weightData = Array.from({ length: 15 }, (_, i) => ({
-      id: uuidv4(),
-      name: `Bobot ${i + 1}`,
-      IPK_weight: 10,
-      college_major_weight: 10,
-      intern_category_weight: 20,
-      CV_score_weight: 20,
-      KRS_remaining_weight: 10,
-      motivation_letter_score_weight: 10,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }));
+    const weightData = [
+      {
+        id: uuidv4(),
+        name: "Prioritas Kategori Magang",
+        intern_category_weight: 30,
+        IPK_weight: 25,
+        CV_score_weight: 20,
+        motivation_letter_score_weight: 15,
+        college_major_weight: 7,
+        KRS_remaining_weight: 3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: uuidv4(),
+        name: "Prioritas IPK",
+        IPK_weight: 30,
+        intern_category_weight: 25,
+        CV_score_weight: 20,
+        motivation_letter_score_weight: 15,
+        college_major_weight: 7,
+        KRS_remaining_weight: 3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
 
     await queryInterface.bulkInsert("weights", weightData);
   },
