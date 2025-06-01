@@ -1,4 +1,3 @@
-// Adaptasi dari SAW ke MOORA dengan tambahan cost: KRS_remaining
 const applicationRepo = require("../repositories/application.repositories");
 const weightRepo = require("../repositories/weight.repositories");
 const DSSRepo = require("../repositories/DSS.repositories");
