@@ -225,7 +225,7 @@ exports.getDSS_Results = async ({
   year,
   page = 1,
   limit = 10,
-  sort = "asc",
+  sort = "",
   sortBy = "",
   search = "",
 }) => {

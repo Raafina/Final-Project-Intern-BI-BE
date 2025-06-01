@@ -6,7 +6,7 @@ exports.getDSS_Results = async ({
   year,
   page = 1,
   limit = 10,
-  sort = "asc",
+  sort = "desc",
   sortBy = "total_score",
   search = "",
 }) => {
@@ -32,19 +32,8 @@ exports.getDSS_Results = async ({
     "motivation_letter_score",
   ];
 
-  let order = [];
-
-  if (
-    ["total_score", "accepted_division", "createdAt", "updatedAt"].includes(
-      sortBy
-    )
-  ) {
-    order = [[sortBy, sort.toUpperCase()]];
-  } else if (applicationColumns.includes(sortBy)) {
-    order = [
-      [{ model: application, as: "application" }, sortBy, sort.toUpperCase()],
-    ];
-  }
+  const sortDirection = sort.toLowerCase() === "asc" ? "ASC" : "DESC";
+  const order = [[sortBy, sortDirection]];
 
   const { count, rows } = await DSS_Result.findAndCountAll({
     include: [
@@ -53,13 +42,16 @@ exports.getDSS_Results = async ({
         as: "application",
         where: appFilter,
         attributes: applicationColumns,
+        required: true,
       },
     ],
     order,
     offset: (page - 1) * limit,
-    limit: limit,
+    limit: parseInt(limit),
+    distinct: true,
   });
 
+  // Transform data
   const data = rows.map((row) => ({
     id: row.id,
     total_score: row.total_score,
@@ -71,9 +63,9 @@ exports.getDSS_Results = async ({
     data,
     totalItems: count,
     totalPages: Math.ceil(count / limit),
+    currentPage: parseInt(page),
   };
 };
-
 exports.saveDSS_Result = async (payload) => {
   const data = await DSS_Result.bulkCreate(payload);
   return data;
