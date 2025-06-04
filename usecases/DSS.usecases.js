@@ -67,9 +67,6 @@ const college_major_mapping = {
   },
 };
 
-// Normalize GPA to a 0-1 scale
-const normalizeIPK = (ipk) => ipk / 4.0;
-
 // MOORA Vector Normalization for multiple applicants
 const mooraVectorNormalize = (data, keys) => {
   if (!data || data.length === 0) return [];
@@ -238,12 +235,11 @@ exports.calculate = async (year, month, weight_id, division_quota) => {
       original_IPK: d.IPK,
       original_intern_category: d.intern_category,
       original_college_major: d.college_major,
-      IPK: normalizeIPK(parseFloat(d.IPK)),
+      IPK: parseFloat(d.IPK),
       intern_category: intern_category_mapping[d.intern_category] || 0.5,
       college_major: college_major_score,
-      CV_score: (parseFloat(d.CV_score) ?? 0) / 100,
-      motivation_letter_score:
-        (parseFloat(d.motivation_letter_score) ?? 0) / 100,
+      CV_score: parseFloat(d.CV_score) ?? 0,
+      motivation_letter_score: parseFloat(d.motivation_letter_score) ?? 0,
       KRS_remaining: parseFloat(d.KRS_remaining) ?? 0,
     };
   });
