@@ -26,6 +26,7 @@ exports.getApplications = async ({
       full_name: item.full_name,
       start_month: item.start_month,
       IPK: item.IPK,
+      KRS_remaining: item.KRS_remaining,
       intern_category: item.intern_category,
       college_major: item.college_major,
       division_request: item.division_request,

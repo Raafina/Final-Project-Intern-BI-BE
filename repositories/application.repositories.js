@@ -35,6 +35,7 @@ exports.getApplications = async ({
       "division_request",
       "start_month",
       "IPK",
+      "KRS_remaining",
       "intern_category",
       "college_major",
       "google_drive_link",
